@@ -23,13 +23,19 @@ export function WebSiteJsonLd() {
   );
 }
 
-export function SoftwareApplicationJsonLd() {
+export function SoftwareApplicationJsonLd({
+  name = `${siteConfig.gameName} Calculator`,
+  description = `Free ${siteConfig.gameName} Roblox calculator and decision helper.`
+}: {
+  name?: string;
+  description?: string;
+} = {}) {
   return (
     <JsonLd
       data={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        name: `${siteConfig.gameName} Calculator`,
+        name,
         operatingSystem: "Web",
         applicationCategory: "GameApplication",
         offers: {
@@ -37,7 +43,7 @@ export function SoftwareApplicationJsonLd() {
           price: "0",
           priceCurrency: "USD"
         },
-        description: `Free ${siteConfig.gameName} Roblox calculator and decision helper.`
+        description
       }}
     />
   );

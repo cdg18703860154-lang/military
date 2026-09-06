@@ -21,7 +21,6 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,
-  keywords: siteConfig.keywords,
   manifest: "/manifest.webmanifest",
   icons: {
     icon: [

@@ -10,7 +10,7 @@ export const siteConfig: SiteConfig = {
   description: "Exact-game Military Army Tycoon guides for base economy, squads, Orders, captures, codes, Rebirth, and current Roblox links.",
   valueProposition: "Build the base, stabilize Cash, command squads, and capture strategic locations with an exact-game field guide.",
   shortDisclosure: `${siteBrandName} is an independent fan guide. Roblox and Battle Action remain the official sources for the game, purchases, moderation, and account support.`,
-  lastUpdated: "2026-09-01",
+  lastUpdated: "2026-09-06",
   freshnessLabel: "exact-game evidence check",
   keywords: [
     "military army tycoon",
@@ -21,18 +21,13 @@ export const siteConfig: SiteConfig = {
   ],
   navGroups: [
     {
-      label: "Army Builder",
-      href: "/army-builder",
-      items: []
-    },
-    {
       label: "Codes",
       href: "/codes",
       items: []
     },
     {
-      label: "Tier List",
-      href: "/tier-list",
+      label: "Beginner Guide",
+      href: "/guides/getting-started",
       items: []
     },
     {
@@ -42,22 +37,22 @@ export const siteConfig: SiteConfig = {
         {
           label: "Getting Started",
           href: "/guides/getting-started",
-          description: "Build the first Cash loop and command a Pistol Squad."
+          description: "Build income, redeem codes, recruit a squad, and prepare an outpost."
         },
         {
           label: "How to Get Cash",
           href: "/guides/how-to-get-cash",
-          description: "Trace Droppers, Upgraders, Oil Containers, and collector risk."
+          description: "Compare Cash sources, spending priorities, codes, and dated outpost evidence."
         },
         {
           label: "How to Capture",
           href: "/guides/how-to-capture",
-          description: "Use Orders and confirm the live strategic-location result."
+          description: "Use Follow and Attack, verify the banner, and fix failed attempts."
         },
         {
           label: "Rebirth",
           href: "/guides/rebirth",
-          description: "Read the dated cost and reset warning before confirming."
+          description: "Separate dated cost and reset evidence from current unknowns."
         }
       ]
     },
@@ -66,26 +61,41 @@ export const siteConfig: SiteConfig = {
       href: "/wiki",
       items: [
         {
-          label: "Base Economy",
+          label: "Base & Economy",
           href: "/wiki/base-economy",
-          description: "Droppers, Upgraders, Oil Containers, and the Barracks handoff."
+          description: "Droppers, Upgraders, collector, and launch-window economy records."
         },
         {
           label: "Squads",
           href: "/wiki/squads",
-          description: "Observed Pistol, Rifle, and SMG Squad labels."
+          description: "Pistol, Rifle, and SMG labels, evidence limits, and missing stats."
         },
         {
           label: "Weapons",
           href: "/wiki/weapons",
-          description: "Current exact-game weapon labels and known limits."
+          description: "Glock-17 and AK-47 Rifle labels with current evidence limits."
         },
         {
           label: "Orders",
           href: "/wiki/orders",
-          description: "Attack, Hold, Follow, and Retreat command notes."
+          description: "Follow, Attack, Hold, and Retreat for travel, combat, and recovery."
+        },
+        {
+          label: "Squad Comparison",
+          href: "/tier-list",
+          description: "Evidence-first comparison and the standard required for a real ranking."
         }
       ]
+    },
+    {
+      label: "Army Planner",
+      href: "/army-builder",
+      items: []
+    },
+    {
+      label: "Updates",
+      href: "/updates",
+      items: []
     },
     {
       label: "More",
@@ -95,11 +105,6 @@ export const siteConfig: SiteConfig = {
           label: "Official Links",
           href: "/trello",
           description: "Verified Roblox destinations and unverified-link warnings."
-        },
-        {
-          label: "Updates",
-          href: "/updates",
-          description: "Dated creator-link checks without invented patch notes."
         },
         {
           label: "Gallery",
