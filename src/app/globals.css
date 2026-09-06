@@ -248,7 +248,7 @@ body > header img {
   font-weight: 800;
 }
 
-/* Route layout: one full-width homepage, three true columns on inner pages. */
+/* Only long-form details use the three-column advertising layout. */
 
 .page-scaffold {
   min-height: calc(100svh - 4.5rem);
@@ -265,23 +265,41 @@ body > header img {
 }
 
 .page-scaffold-inner {
-  display: grid;
-  width: min(100%, 96rem);
+  display: block;
+  width: min(100%, 60rem);
   margin-inline: auto;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 58rem) minmax(0, 1fr);
-  gap: clamp(1rem, 2vw, 2.25rem);
   padding-inline: 1rem;
 }
 
 .page-scaffold-inner .page-scaffold-content {
   min-width: 0;
-  grid-column: 2;
 }
 
-[data-empty-rail] {
+.article-ad-rail {
+  display: none;
   min-width: 0;
-  pointer-events: none;
-  user-select: none;
+}
+
+@media (min-width: 1280px) {
+  .page-scaffold-detail {
+    display: grid;
+    width: min(100%, 96rem);
+    grid-template-columns: minmax(160px, 1fr) minmax(0, 58rem) minmax(160px, 1fr);
+    gap: clamp(1rem, 2vw, 2.25rem);
+  }
+
+  .article-ad-rail {
+    display: block;
+    position: sticky;
+    top: 6rem;
+    align-self: start;
+    padding-block: 1.5rem;
+  }
+
+  .article-ad-rail .ad-shell {
+    max-width: 160px;
+    margin-inline: auto;
+  }
 }
 
 .page-scaffold-inner .page-scaffold-content > main {
@@ -838,7 +856,7 @@ main input[type="radio"] {
   gap: 0.75rem;
 }
 
-/* Advertising remains in the middle column; both layout rails stay empty. */
+/* Reserve creative dimensions without forcing small containers to overflow. */
 
 .ad-shell {
   display: flex;
@@ -864,6 +882,19 @@ main input[type="radio"] {
   text-transform: uppercase;
 }
 
+.ad-shell--banner {
+  padding-inline: 0;
+  border-inline-width: 0;
+}
+
+.ad-shell--banner .ad-label {
+  margin-inline: 0.75rem;
+}
+
+.ad-shell--160x600 { min-height: 640px; }
+.ad-shell--160x300 { min-height: 340px; }
+.ad-shell--300x250 { min-height: 290px; }
+
 .ad-host {
   display: flex;
   min-width: 0;
@@ -886,8 +917,7 @@ main input[type="radio"] {
   margin: 1.25rem auto 0;
 }
 
-.ad-placement:empty,
-.ad-placement:not(:has(.ad-shell)) {
+.ad-placement:empty {
   display: none;
   margin: 0;
 }
@@ -981,10 +1011,6 @@ body > footer > div > div:last-child {
 
   .page-scaffold-inner .page-scaffold-content {
     grid-column: 1;
-  }
-
-  [data-empty-rail] {
-    display: none;
   }
 
   main[data-page-role="homepage-product"] > section[data-home-module="answer"] {

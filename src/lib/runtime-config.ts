@@ -1,3 +1,5 @@
+import { adsterraStaticConfig } from "@/lib/adsterra.generated";
+
 import { generatedAnalyticsId } from "@/generated/analytics-config";
 
 function readEnv(value: string | undefined): string | undefined {
@@ -17,7 +19,7 @@ function readNumberEnv(value: string | undefined, fallback: number): number {
   return Number.isFinite(parsed) && parsed >= 0 ? parsed : fallback;
 }
 
-export const runtimeConfig = {
+const runtimeEnvConfig = {
   adsterraBannerId: readEnv(process.env.NEXT_PUBLIC_ADSTERRA_BANNER_ID),
   adsterraBanner300x250Key:
     readEnv(process.env.NEXT_PUBLIC_ADSTERRA_BANNER_300X250_KEY) ||
@@ -47,4 +49,12 @@ export const runtimeConfig = {
   adsterraEnableSocialBar: readBooleanEnv(process.env.NEXT_PUBLIC_ADSTERRA_ENABLE_SOCIAL_BAR, false),
   adsterraEnableStickyRail: readBooleanEnv(process.env.NEXT_PUBLIC_ADSTERRA_ENABLE_STICKY_RAIL, false),
   analyticsId: readEnv(process.env.NEXT_PUBLIC_ANALYTICS_ID) || generatedAnalyticsId
+};
+
+export const runtimeConfig = {
+  ...runtimeEnvConfig,
+  ...adsterraStaticConfig,
+  // Page inventory is enabled by the bridge; global formats require a separate opt-in.
+  adsterraEnablePopunder: runtimeEnvConfig.adsterraEnablePopunder,
+  adsterraEnableSocialBar: runtimeEnvConfig.adsterraEnableSocialBar
 };

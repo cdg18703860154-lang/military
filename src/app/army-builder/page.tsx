@@ -478,7 +478,6 @@ export default function ToolAssetPage() {
   {toolPage.gameVisual.publicPath ? <figure data-game-visual="true" className="float-right mb-3 ml-4 w-16 md:w-24"><img src={toolPage.gameVisual.publicPath} alt={toolPage.gameVisual.alt} width={512} height={512} data-source-ref={toolPage.gameVisual.sourceRef} data-source-url={toolPage.gameVisual.sourceUrl} data-license-status={toolPage.gameVisual.licenseStatus} data-asset-sha256={toolPage.gameVisual.assetSha256} className="h-auto w-full rounded-2xl" /></figure> : null}
   {/* rb-auto-game-visual:end */}
   <h1 className="text-4xl font-extrabold leading-tight md:text-5xl">{toolPage.headline}</h1>{toolPage.leadHeading ? <h2 className="mt-4 text-2xl font-bold md:text-3xl" data-consumption-field={toolPage.headlinePath || undefined}>{toolPage.leadHeading}</h2> : null}<a data-tool-primary-action="true" href="#tool-inputs" className="mt-5 inline-flex min-h-11 items-center rounded-xl bg-amber-400 px-5 py-3 font-bold text-slate-950">Open the readiness checklist</a><p className="mt-4 text-lg leading-8" data-consumption-field={toolPage.answerPath || undefined}>{toolPage.answer}</p><p data-tool-version="true" className="mt-3 text-sm text-white/70">Checked {toolPage.tool.dataVersion}</p></section>
-  <AdsterraToolAd />
 
   {toolPage.claimIds.map(claimId => <span key={claimId} data-claim-id={claimId} aria-hidden="true" />)}
   {toolPage.experienceIds.map(evidenceId => <span key={evidenceId} data-experience-id={evidenceId} aria-hidden="true" />)}
@@ -508,6 +507,7 @@ export default function ToolAssetPage() {
       <h2 className="text-2xl font-extrabold">Current decision</h2>
       <dl className="mt-4 grid gap-4 md:grid-cols-2">{toolPage.tool.outputs.map((output: any) => <div key={output.key}><dt className="text-sm text-white/60">{output.label}</dt><dd className="mt-1 text-lg font-bold">{String(result[output.key] || "Unavailable")}</dd></div>)}</dl>
     </section>
+    <AdsterraToolAd />
     <section data-tool-result-states="true" data-asset-module="tool-result" className="my-8"><h2 className="text-2xl font-bold">All decision states</h2><p className="mt-2 leading-7">Use this reference to see what the checklist can return before changing inputs.</p><ul className="mt-4 grid gap-3">{toolPage.tool.rules.map((rule: any, index: number) => <li key={index} className="rounded-xl border border-white/10 p-4">{Object.values(rule.result).join(" · ")}</li>)}</ul></section>
     <section data-tool-methodology="true" data-asset-module="tool-methodology" className="my-8"><h2 className="text-2xl font-bold">How this checklist decides</h2><p className="mt-3 leading-7">{toolPage.tool.explanation}</p></section>
     <section data-tool-examples="true" className="my-8"><h2 className="text-2xl font-bold">Decision examples</h2>{toolPage.tool.examples.map((example: any) => <article key={example.label} className="mt-3 rounded-xl border border-white/10 p-4"><h3 className="text-xl font-bold">{example.label}</h3><p className="mt-2">{Object.values(example.result).join(" · ")}</p></article>)}</section>

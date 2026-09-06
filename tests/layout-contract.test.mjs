@@ -8,21 +8,24 @@ async function read(relativePath) {
   return readFile(new URL(relativePath, projectRoot), "utf8");
 }
 
-test("the shared route scaffold keeps the homepage single-column and inner pages in an empty-rail grid", async () => {
+test("the scaffold delegates only detail pages to the article rail layout", async () => {
   const scaffold = await read("src/components/layout/PageScaffold.tsx");
   const layout = await read("src/app/layout.tsx");
+  const article = await read("src/components/layout/PageLayouts.tsx");
   const css = await read("src/app/globals.css");
 
   assert.match(scaffold, /usePathname/);
-  assert.match(scaffold, /pathname === "\/"/);
-  assert.equal((scaffold.match(/data-empty-rail/g) || []).length, 2);
+  assert.match(scaffold, /family === "home"/);
+  assert.match(scaffold, /family === "detail"/);
+  assert.equal((article.match(/data-ad-rail=/g) || []).length, 2);
   assert.match(layout, /<PageScaffold>\{children\}<\/PageScaffold>/);
-  assert.doesNotMatch(layout, /AdsterraStickyRail/);
+  assert.doesNotMatch(layout, /AdsterraStickyRail|AdsterraGlobalFallback/);
 
   assert.match(css, /\.page-scaffold-home\s*\{/);
   assert.match(css, /\.page-scaffold-inner\s*\{/);
   assert.match(css, /grid-template-columns:\s*minmax\([^;]+\)\s+minmax\(0,\s*58rem\)\s+minmax\([^;]+\)/);
-  assert.match(css, /\[data-empty-rail\]/);
+  assert.match(css, /@media\s*\(min-width:\s*1280px\)/);
+  assert.doesNotMatch(scaffold, /data-empty-rail/);
   assert.match(css, /@media\s*\(max-width:\s*860px\)/);
 });
 
