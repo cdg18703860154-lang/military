@@ -3,24 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const requiredRoutes = [
-  "/",
-  "/codes",
-  "/tier-list",
-  "/trello",
-  "/calculator",
-  "/squad-planner",
-  "/resource-calculator",
-  "/guides",
-  "/guides/beginner",
-  "/guides/progression",
-  "/guides/farming",
-  "/wiki",
-  "/wiki/items-and-rewards",
-  "/wiki/maps-and-systems",
-  "/wiki/builds-and-entities",
-  "/updates",
-];
+const requiredRoutes = ["/", "/codes", "/tier-list", "/trello", "/army-builder", "/guides", "/guides/getting-started", "/guides/how-to-get-cash", "/guides/how-to-capture", "/guides/rebirth", "/guides/military-army-tycoon-vs-military-tycoon", "/wiki", "/wiki/base-economy", "/wiki/orders", "/wiki/weapons", "/wiki/squads", "/updates"];
 
 function pagePathFor(route) {
   return route === "/"

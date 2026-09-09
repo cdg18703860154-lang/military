@@ -49,12 +49,12 @@ test("Home and Codes share the dated two-code record", async () => {
   ]);
 
   assert.match(home, /currentCodes/);
-  assert.match(codes, /currentCodes/);
+  assert.match(codes, /codeSummary/);
   assert.match(current, /code: "BONUS"/);
   assert.match(current, /code: "JOINED"/);
   assert.match(current, /reportedReward: "50,000 Cash"/);
-  assert.match(current, /sourceCheckedAt: "September 5, 2026"/);
-  assert.match(current, /siteReviewedAt: "September 6, 2026"/);
+  assert.match(current, /sourceCheckedAt: "September 9, 2026"/);
+  assert.match(current, /siteReviewedAt: "September 9, 2026"/);
 });
 
 test("global metadata does not emit a meta-keywords field", async () => {

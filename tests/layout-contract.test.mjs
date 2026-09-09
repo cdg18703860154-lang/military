@@ -45,8 +45,8 @@ test("every static support route owns its social metadata", async () => {
     assert.match(page, /openGraph:/, `${route} must define Open Graph metadata`);
     assert.match(page, /twitter:/, `${route} must define Twitter metadata`);
     if (route === "trello" || route === "updates") {
-      assert.match(page, new RegExp(`"route": "/${route}"`), `${route} must expose its route to metadata`);
-      assert.match(page, /url: `\$\{siteConfig\.domain\}\$\{statusPage\.route\}`/, `${route} must own its social URL`);
+      assert.match(page, new RegExp(`const route = "/${route}/"`), `${route} must expose its canonical route to metadata`);
+      assert.match(page, /url: `\$\{siteConfig\.domain\}\$\{route\}`/, `${route} must own its social URL`);
     } else {
       assert.match(page, new RegExp(`url: .*\\$\\{siteConfig\\.domain\\}.*${route}`), `${route} must own its social URL`);
     }

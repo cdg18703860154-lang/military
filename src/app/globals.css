@@ -1084,3 +1084,12 @@ body > footer > div > div:last-child {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Long reference answers wrap within keyboard-scrollable table regions. */
+main [role="region"] table { white-space: normal; display: table; }
+main [role="region"] td { min-width: 9rem; overflow-wrap: anywhere; }
+main .current-code-table { table-layout: fixed; }
+main .current-code-table td, main .current-code-table th { min-width: 0; padding: .65rem; }
+main .current-code-table button { white-space: normal; max-width: 100%; }
+[data-source-notes] > section, [data-source-notes] > nav, [data-source-notes] > details { padding: 1rem; border: 1px solid var(--line); border-radius: var(--radius-sm); }
+main :is(a, button, select, summary, [tabindex]):focus-visible { outline: 2px solid #67e8f9; outline-offset: 3px; }

@@ -15,6 +15,7 @@ export const metadata: Metadata = {
 };
 
 const guides = [
+  { title: "Correct Game Check", body: "Tell Battle Action’s Military Army Tycoon from InfinityInteractive’s Military Tycoon using developer names, Place IDs, code UI and map clues.", href: "/guides/military-army-tycoon-vs-military-tycoon/", action: "Open the correct game" },
   { title: "Getting Started", body: "Build the first income loop, redeem current codes, recruit an early squad, learn Orders and prepare for your first outpost.", href: "/guides/getting-started/", action: "Follow the first-session route" },
   { title: "How to Get Cash", body: "Compare current Cash sources, spending priorities, code rewards and the dated evidence behind outpost income.", href: "/guides/how-to-get-cash/", action: "Improve the Cash loop" },
   { title: "How to Capture", body: "Use Follow and Attack, enter the marked capture area, verify the live banner and fix common failed attempts.", href: "/guides/how-to-capture/", action: "Prepare an outpost capture" },

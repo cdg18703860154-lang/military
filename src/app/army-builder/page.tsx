@@ -68,17 +68,18 @@ export default function ArmyMissionPlannerPage() {
     setInputs(initialInputs);
     setPlan(createMissionPlan(initialInputs));
     setGenerated(false);
-    track("army_planner_reset", { objective: initialInputs.objective });
+    track("army_planner_reset", { page: "/army-builder/" });
   }
 
   return (
     <main data-asset-family="tool" data-page-role="interactive-tool" className="mx-auto max-w-5xl px-4 py-10">
       <section data-first-screen-answer>
-        <PageIntro eyebrow="Army Mission Planner • evidence reviewed September 6, 2026" title="Build Your Next Army Mission Plan" description="Choose your objective and current readiness. The planner returns a Base → Squad → Orders → Objective → Verify route using documented systems. It does not calculate hidden combat power, invent squad stats, or guarantee a win.">
+        <PageIntro eyebrow="Army Mission Planner • evidence reviewed September 9, 2026" title="Build Your Next Army Mission Plan" description="Choose your objective and current readiness. “Mission” here means your planning objective, not the unconfirmed in-game Missions feature. The planner returns a Base → Squad → Orders → Objective → Verify route using documented systems. It does not calculate hidden combat power, invent squad stats, or guarantee a win.">
           <p className="text-sm text-white/70"><strong>Hidden stat model:</strong> none. <strong>Supported:</strong> economy, squad readiness, Orders, first-outpost flow, retreat, and Rebirth prompt checks.</p>
         </PageIntro>
       </section>
 
+      <noscript><p>JavaScript is required to generate a custom plan. Use the decision rules and static guide links below to choose your next step.</p></noscript>
       <form onSubmit={generate} className="mt-5 grid gap-6 rounded-3xl border p-6 md:p-8">
         <section>
           <h2>Choose your objective</h2>

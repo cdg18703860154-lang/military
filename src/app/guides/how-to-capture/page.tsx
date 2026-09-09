@@ -37,7 +37,7 @@ const faq = [
 export default function CaptureGuidePage() {
   return (
     <GuideArticle
-      eyebrow="Capture flow observed August 31, 2026 • reviewed September 6, 2026"
+      eyebrow="Capture flow observed August 31, 2026 • reviewed September 9, 2026"
       title="How to Capture Outposts in Military Army Tycoon"
       description="Prepare a working income loop, recruit a squad, use Follow while travelling, switch to Attack near defenders, enter the marked area, and wait for the live capture banner. The documented +10% Income Tent Camp reward is a dated observation, not a guarantee for every location."
       status={<p className="text-sm text-white/70"><strong>Patch note:</strong> The official title now includes [GAZ Tiger], but that title change does not establish a capture mechanic.</p>}
@@ -61,7 +61,7 @@ export default function CaptureGuidePage() {
         "Assuming [GAZ Tiger] explains a capture mechanic."
       ]}
       faq={faq}
-      sourceNotes={<><aside><strong>Evidence boundary:</strong> Follow, Attack, Hold, Retreat, the named locations, and the Tent Camp banner come from a dated August 31, 2026 exact-game walkthrough. All-location +10% rewards and stacking are not published as facts.</aside><aside>Need command details? Open the <Link href="/wiki/orders/" className="font-bold text-cyan-300">Orders guide</Link>. Need to rebuild? Use the <Link href="/guides/how-to-get-cash/" className="font-bold text-cyan-300">Cash guide</Link> or <Link href="/army-builder/" className="font-bold text-cyan-300">Army Mission Planner</Link>.</aside></>}
+      sourceNotes={<><section><h2>Evidence boundary</h2><p> Follow, Attack, Hold, Retreat, the named locations, and the Tent Camp banner come from a dated August 31, 2026 exact-game walkthrough. All-location +10% rewards and stacking are not published as facts.</p></section><nav aria-label="Related guides"><h2>Related guides</h2><p>Need command details? Open the <Link href="/wiki/orders/" className="font-bold text-cyan-300">Orders guide</Link>. Need to rebuild? Use the <Link href="/guides/how-to-get-cash/" className="font-bold text-cyan-300">Cash guide</Link> or <Link href="/army-builder/" className="font-bold text-cyan-300">Army Mission Planner</Link>.</p></nav></>}
       breadcrumb="How to Capture"
       route="/guides/how-to-capture/"
     >

@@ -7,6 +7,7 @@ const outputRoot = path.resolve("out");
 const pages = {
   "/": ["Military Army Tycoon Wiki: Codes, Guides & Updates", "Military Army Tycoon Wiki"],
   "/codes/": ["Military Army Tycoon Codes (September 2026)", "Military Army Tycoon Codes"],
+  "/guides/military-army-tycoon-vs-military-tycoon/": ["Military Army Tycoon vs Military Tycoon: Correct Roblox Game", "Military Army Tycoon vs Military Tycoon"],
   "/guides/": ["Military Army Tycoon Guides", "Military Army Tycoon Guides"],
   "/guides/getting-started/": ["Military Army Tycoon Beginner Guide: First Session", "Military Army Tycoon Beginner Guide"],
   "/guides/how-to-get-cash/": ["How to Get Cash Fast in Military Army Tycoon", "How to Get Cash in Military Army Tycoon"],
@@ -15,14 +16,14 @@ const pages = {
   "/wiki/": ["Military Army Tycoon Wiki: Systems & Records", "Military Army Tycoon Wiki Records"],
   "/wiki/base-economy/": ["Military Army Tycoon Base & Economy Guide", "Military Army Tycoon Base & Economy"],
   "/wiki/squads/": ["Military Army Tycoon Squads: Confirmed Names & Limits", "Military Army Tycoon Squads"],
-  "/wiki/weapons/": ["Military Army Tycoon Weapons: Confirmed Names & Limits", "Military Army Tycoon Weapons"],
+  "/wiki/weapons/": ["Military Army Tycoon Weapons: Confirmed Names & Update Limits", "Military Army Tycoon Weapons"],
   "/wiki/orders/": ["Military Army Tycoon Orders: Follow, Attack, Hold & Retreat", "Military Army Tycoon Orders Guide"],
   "/tier-list/": ["Military Army Tycoon Squad Comparison & Tier List Status", "Military Army Tycoon Squad Comparison"],
   "/army-builder/": ["Military Army Tycoon Army Mission Planner", "Build Your Next Army Mission Plan"],
   "/updates/": ["Military Army Tycoon Updates & GAZ Tiger Status", "Military Army Tycoon Updates"],
   "/sources/": ["Sources & Editorial Method | Military Army Tycoon Wiki", "Sources and Editorial Method"],
   "/about/": ["About Military Army Tycoon Wiki", "About Military Army Tycoon Wiki"],
-  "/trello/": ["Military Army Tycoon Trello, Discord & Official Links", "Trello, Discord & Official Links"],
+  "/trello/": ["Military Army Tycoon Trello, Discord & Official Links Status", "Military Army Tycoon Official Links Status"],
   "/gallery/": ["Military Army Tycoon Official Image Gallery", "Military Army Tycoon Image Gallery"]
 };
 
@@ -83,3 +84,44 @@ for (const link of allHtml.matchAll(/<a\b[^>]*href="(\/[^"]*)"/gi)) {
 for (const file of ["robots.txt", "sitemap.xml"]) await assert.doesNotReject(access(path.join(outputRoot, file)), file);
 
 console.log(`Verified ${Object.keys(pages).length} exported pages, metadata, canonicals, schema, copy rules, and internal links.`);
+
+const sitemapXml = await readFile(path.join(outputRoot, "sitemap.xml"), "utf8");
+const sitemapUrls = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+assert.equal(new Set(sitemapUrls).size, sitemapUrls.length, "Duplicate sitemap URLs");
+const titles = new Set();
+const descriptions = new Set();
+for (const url of sitemapUrls) {
+  const route = new URL(url).pathname;
+  assert.equal(url, `${baseUrl}${route}`, "Sitemap must use canonical host");
+  assert.ok(route.endsWith("/") && !url.includes("?"), "Canonical sitemap path");
+  const html = await readFile(fileForRoute(route), "utf8");
+  const visible = textContent(html);
+  assert.equal((html.match(/<h1\b/gi) ?? []).length, 1, `${route} H1 count`);
+  assert.equal(html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i)?.[1], url);
+  assert.doesNotMatch(html, /name="robots"[^>]*content="[^"]*noindex/i);
+  assert.doesNotMatch(visible, /\\u[0-9a-f]{4}|this site should display|Current public wording|the checked answer|Checked detail/i);
+  for (const heading of html.matchAll(/<h[123]\b[^>]*>([\s\S]*?)<\/h[123]>/g)) assert.ok(textContent(heading[1]).length, `${route} empty heading`);
+  const title = matchOne(html, /<title>([\s\S]*?)<\/title>/, "title");
+  const description = html.match(/name="description"\s+content="([^"]+)"/)?.[1];
+  assert.ok(description, `${route} description`);
+  assert.ok(!titles.has(title), `${route} duplicate title`);
+  assert.ok(!descriptions.has(description), `${route} duplicate description`);
+  titles.add(title); descriptions.add(description);
+  for (const link of html.matchAll(/<a\b[^>]*href="(\/[^"]*)"/gi)) {
+    const target = link[1].split(/[?#]/)[0];
+    if (!target || target.includes(".")) continue;
+    await access(fileForRoute(target.endsWith("/") ? target : `${target}/`));
+  }
+  for (const script of html.matchAll(/<script\s+type="application\/ld\+json">([\s\S]*?)<\/script>/gi)) {
+    const data = JSON.parse(script[1]);
+    if (data["@type"] === "FAQPage") for (const question of data.mainEntity) {
+      assert.ok(visible.includes(question.name), `${route} FAQ question must be visible`);
+      assert.ok(visible.includes(question.acceptedAnswer.text), `${route} FAQ answer must be visible`);
+    }
+  }
+}
+const robots = await readFile(path.join(outputRoot, "robots.txt"), "utf8");
+assert.doesNotMatch(robots, /^Disallow:\s*\/$/m);
+assert.match(robots, /Sitemap: https:\/\/military-armytycoon\.wiki\/sitemap\.xml/);
+assert.ok(sitemapUrls.includes(`${baseUrl}/guides/military-army-tycoon-vs-military-tycoon/`));
+console.log(`Crawled all ${sitemapUrls.length} sitemap pages: unique metadata, visible FAQ schema, canonical URLs, and internal links pass.`);

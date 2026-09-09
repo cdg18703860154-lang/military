@@ -34,7 +34,7 @@ export default function RebirthPage() {
         <tr><td>Observed launch-window requirement</td><td>250,000 Cash on August 30, 2026</td></tr>
         <tr><td>Current money</td><td>Dated prompt said it would be lost</td></tr>
         <tr><td>Robux items</td><td>Dated prompt said they would be kept</td></tr>
-        <tr><td>Current requirement on September 6, 2026</td><td>Not independently rechecked</td></tr>
+        <tr><td>Current requirement on September 9, 2026</td><td>Not independently rechecked</td></tr>
         <tr><td>Buildings, Droppers, Upgraders</td><td>Not confirmed</td></tr>
         <tr><td>Squads, weapons, outposts</td><td>Not confirmed</td></tr>
         <tr><td>Group boost</td><td>Not confirmed</td></tr>
@@ -58,7 +58,7 @@ export default function RebirthPage() {
         "Publishing a multiplier from one unsourced article."
       ]}
       faq={faq}
-      sourceNotes={<><aside><strong>Evidence boundary:</strong> The 250,000 Cash threshold, money-loss warning, and kept Robux items are tied only to an August 30, 2026 site record. Everything marked unconfirmed remains unconfirmed.</aside><aside>Compare immediate Cash uses in the <Link href="/guides/how-to-get-cash/" className="font-bold text-cyan-300">Cash guide</Link>, inspect dated changes in <Link href="/updates/" className="font-bold text-cyan-300">Updates</Link>, or report a new prompt through <Link href="/contact/" className="font-bold text-cyan-300">Contact</Link>.</aside></>}
+      sourceNotes={<><section><h2>Evidence boundary</h2><p> The 250,000 Cash threshold, money-loss warning, and kept Robux items are tied only to an August 30, 2026 site record. Everything marked unconfirmed remains unconfirmed.</p></section><nav aria-label="Related guides"><h2>Related guides</h2><p>Compare immediate Cash uses in the <Link href="/guides/how-to-get-cash/" className="font-bold text-cyan-300">Cash guide</Link>, inspect dated changes in <Link href="/updates/" className="font-bold text-cyan-300">Updates</Link>, or report a new prompt through <Link href="/contact/" className="font-bold text-cyan-300">Contact</Link>.</p></nav></>}
       breadcrumb="Rebirth"
       route="/guides/rebirth/"
     >

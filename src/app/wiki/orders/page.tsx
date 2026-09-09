@@ -34,7 +34,7 @@ export default function OrdersPage() {
       eyebrow="Wiki record • behavior observed August 31, 2026"
       title="Military Army Tycoon Orders Guide"
       description="A dated exact-game walkthrough documents Follow, Attack, Hold, and Retreat. Use Follow for travel, Attack near enemy NPCs, Hold at a position, and Retreat to leave a losing fight. Recheck panel location and behavior after updates."
-      status={<p className="text-sm text-white/70"><strong>Page review:</strong> September 6, 2026. <strong>Hidden AI or pathfinding values:</strong> unavailable.</p>}
+      status={<p className="text-sm text-white/70"><strong>Page review:</strong> September 9, 2026. <strong>Hidden AI or pathfinding values:</strong> unavailable.</p>}
       beforeSteps={<section className="content-card"><h2>Orders at a glance</h2><div className="mt-4 overflow-x-auto"><table><thead><tr><th>Order</th><th>Documented behavior</th><th>Useful situation</th><th>Verify</th></tr></thead><tbody>
         <tr><td>Follow</td><td>Travels with the player</td><td>Moving to an objective</td><td>Units change direction and stay with you</td></tr>
         <tr><td>Attack</td><td>Engages nearby enemy NPCs</td><td>Clearing defenders</td><td>Units switch from travel to combat</td></tr>
@@ -44,7 +44,7 @@ export default function OrdersPage() {
       stepsTitle="How to use each Order"
       steps={steps}
       faq={faq}
-      sourceNotes={<><aside><strong>Evidence boundary:</strong> Behaviors come from a dated August 31, 2026 walkthrough and current labels. No hidden range, cooldown, or AI values are claimed.</aside><aside>Apply these commands in the <Link href="/guides/how-to-capture/" className="font-bold text-cyan-300">outpost capture route</Link>, compare documented <Link href="/wiki/squads/" className="font-bold text-cyan-300">squad labels</Link>, or use the <Link href="/army-builder/" className="font-bold text-cyan-300">Army Mission Planner</Link>.</aside></>}
+      sourceNotes={<><section><h2>Evidence boundary</h2><p> Behaviors come from a dated August 31, 2026 walkthrough and current labels. No hidden range, cooldown, or AI values are claimed.</p></section><nav aria-label="Related guides"><h2>Related guides</h2><p>Apply these commands in the <Link href="/guides/how-to-capture/" className="font-bold text-cyan-300">outpost capture route</Link>, compare documented <Link href="/wiki/squads/" className="font-bold text-cyan-300">squad labels</Link>, or use the <Link href="/army-builder/" className="font-bold text-cyan-300">Army Mission Planner</Link>.</p></nav></>}
       breadcrumb="Orders"
       route="/wiki/orders/"
       family="wiki"

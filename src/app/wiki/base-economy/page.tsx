@@ -23,7 +23,7 @@ const faq = [
 export default function BaseEconomyPage() {
   return (
     <GuideArticle
-      eyebrow="Wiki system record • reviewed September 6, 2026"
+      eyebrow="Wiki system record • reviewed September 9, 2026"
       title="Military Army Tycoon Base & Economy"
       description="The documented early base loop moves production from Droppers through Upgraders to a Cash collector. Launch-window evidence also shows Oil Containers later in the route, while the official description confirms base expansion and upgrades. Exact current prices, rates, and payback times are not verified."
       status={<p className="text-sm text-white/70"><strong>Purpose:</strong> system record, not a fixed fastest-money build. <strong>Exact current rates:</strong> unavailable.</p>}
@@ -37,7 +37,7 @@ export default function BaseEconomyPage() {
         <tr><td>Autosave</td><td>Official description says progress saves automatically</td><td>Does not explain every account or server issue</td></tr>
       </tbody></table></div></section>}
       faq={faq}
-      sourceNotes={<><aside><strong>Evidence boundary:</strong> Official sources support expansion and autosave. The production chain and Oil Containers are dated records. No empty prices, Cash-per-minute claims, or another game&apos;s oil systems are substituted.</aside><aside>For a task-focused purchase route, use <Link href="/guides/how-to-get-cash/" className="font-bold text-cyan-300">How to Get Cash</Link>. Continue to <Link href="/wiki/squads/" className="font-bold text-cyan-300">Squads</Link> after income is stable.</aside></>}
+      sourceNotes={<><section><h2>Evidence boundary</h2><p> Official sources support expansion and autosave. The production chain and Oil Containers are dated records. No empty prices, Cash-per-minute claims, or another game&apos;s oil systems are substituted.</p></section><nav aria-label="Related guides"><h2>Related guides</h2><p>For a task-focused purchase route, use <Link href="/guides/how-to-get-cash/" className="font-bold text-cyan-300">How to Get Cash</Link>. Continue to <Link href="/wiki/squads/" className="font-bold text-cyan-300">Squads</Link> after income is stable.</p></nav></>}
       breadcrumb="Base & Economy"
       route="/wiki/base-economy/"
       family="wiki"

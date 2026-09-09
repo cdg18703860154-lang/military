@@ -23,7 +23,7 @@ const faq = [
 export default function SquadsPage() {
   return (
     <GuideArticle
-      eyebrow="Wiki entity record • reviewed September 6, 2026"
+      eyebrow="Wiki entity record • reviewed September 9, 2026"
       title="Military Army Tycoon Squads"
       description="Current exact-game evidence supports Pistol Squad, Rifle Squad, and SMG Squad labels. A dated August 31, 2026 walkthrough uses Pistol as an early outpost option. The full roster, current costs, health, damage, range, upgrades, and universal ranking are not verified."
       status={<p className="text-sm text-white/70"><strong>Complete roster:</strong> not confirmed. <strong>Public hidden stats:</strong> unavailable.</p>}
@@ -33,13 +33,14 @@ export default function SquadsPage() {
         <tr><td>SMG Squad</td><td>Visible label</td><td>One walkthrough describes close-range pressure</td><td>Keep unranked until range and performance tests</td></tr>
       </tbody></table></div><p>Other names found on fan sites or in promotional images are not added without exact-game evidence.</p></section>}
       faq={faq}
-      sourceNotes={<><aside><strong>Evidence boundary:</strong> Only Pistol, Rifle, and SMG Squad labels are confirmed. Breacher and Reaper remain single-source, and no prices, health, damage, or rank is inferred.</aside><aside>Compare the evidence in <Link href="/tier-list/" className="font-bold text-cyan-300">Squad Comparison</Link>, learn <Link href="/wiki/orders/" className="font-bold text-cyan-300">Orders</Link>, or plan a route with the <Link href="/army-builder/" className="font-bold text-cyan-300">Army Mission Planner</Link>.</aside></>}
+      sourceNotes={<><section><h2>Evidence boundary</h2><p> Only Pistol, Rifle, and SMG Squad labels are confirmed. Breacher and Reaper remain single-source, and no prices, health, damage, or rank is inferred.</p></section><nav aria-label="Related guides"><h2>Related guides</h2><p>Compare the evidence in <Link href="/tier-list/" className="font-bold text-cyan-300">Squad Comparison</Link>, learn <Link href="/wiki/orders/" className="font-bold text-cyan-300">Orders</Link>, or plan a route with the <Link href="/army-builder/" className="font-bold text-cyan-300">Army Mission Planner</Link>.</p></nav></>}
       breadcrumb="Squads"
       route="/wiki/squads/"
       family="wiki"
     >
       <section className="content-card"><h2>How to choose a current squad</h2><ol className="mt-4 list-decimal space-y-2 pl-6"><li>Use a squad that is visible and unlocked.</li><li>Keep enough Cash to replace it.</li><li>Confirm it responds to Follow.</li><li>Match it to a real objective.</li><li>Use Retreat if the fight fails.</li><li>Compare the same conditions before calling one better.</li></ol></section>
-      <section className="content-card"><h2>Missing data</h2><p>Full roster, unlock requirements, prices, squad size, health, damage, range, upgrade costs, replacement behavior, same-outpost performance, and changes after the September 6, 2026 [GAZ Tiger] title observation remain unverified.</p></section>
+      <section className="content-card"><h2>Missing data</h2><p>Full roster, unlock requirements, prices, squad size, health, damage, range, upgrade costs, replacement behavior, same-outpost performance, and changes after the September 9, 2026 [GAZ Tiger] title observation remain unverified.</p></section>
+      <section className="content-card"><h2>Recent names not added to the confirmed table</h2><p>Riot Squad / Oppression and Bizon Squad appear in a September 7 third-party video transcription. Direct footage, exact labels and independent confirmation were not obtained. They remain unconfirmed and are excluded from the roster and rankings.</p><Link href="/updates/">Read the current report status</Link></section>
     </GuideArticle>
   );
 }

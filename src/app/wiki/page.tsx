@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 const records = [
   { title: "Base & Economy", body: "Documented Droppers, Upgraders, collector and launch-window economy records—without invented rates or prices.", href: "/wiki/base-economy/" },
   { title: "Squads", body: "Current Pistol, Rifle and SMG labels, evidence status, selection limits and missing stats.", href: "/wiki/squads/" },
-  { title: "Weapons", body: "Current Glock-17 and AK-47 Rifle labels, evidence limits and their connection to the capture loop.", href: "/wiki/weapons/" },
+  { title: "Weapons", body: "Confirmed Glock-17 and AK-47 Rifle labels, unconfirmed Intervention Sniper reports, and how to evaluate a live weapon.", href: "/wiki/weapons/" },
   { title: "Orders", body: "How Follow, Attack, Hold and Retreat are used for travel, combat, defense and recovery.", href: "/wiki/orders/" },
   { title: "Squad Comparison", body: "An evidence-first comparison of current squad records and the test standard required before publishing a real tier list.", href: "/tier-list/" }
 ] as const;

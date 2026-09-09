@@ -1,3 +1,4 @@
+import { contentReview, codeSummary } from "@/data/current-content";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { GuideArticle, type GuideStep } from "@/components/content/GuideArticle";
@@ -16,11 +17,11 @@ export const metadata: Metadata = {
 const steps: GuideStep[] = [
   {
     title: "Confirm the exact game",
-    body: <><p>Check the developer is <strong>Battle Action</strong>, the Place ID is <strong>95409544559668</strong>, and the official title observed September 6, 2026 is <strong>Military Army Tycoon [GAZ Tiger]</strong>.</p><p>Reject codes, units, maps, Diamonds, vault systems, or Rebirth advice from similarly named games.</p></>
+    body: <><p>Check the developer is <strong>Battle Action</strong>, the Place ID is <strong>95409544559668</strong>, and the official title observed September 9, 2026 is <strong>Military Army Tycoon [GAZ Tiger]</strong>.</p><p>Reject codes, units, maps, Diamonds, vault systems, or Rebirth advice from similarly named games. <Link href="/guides/military-army-tycoon-vs-military-tycoon/">Compare the two Military Tycoon games</Link>.</p></>
   },
   {
     title: "Redeem the current reported codes",
-    body: <><p>Open Settings and the Codes tab. Try <code>BONUS</code> and <code>JOINED</code>, each reported by multiple sources on September 5, 2026 to award 50,000 Cash. This site has not independently redeemed them.</p><p><strong>Success signal:</strong> the client accepts the code and the Cash balance changes. If it fails, use the <Link href="/codes/" className="font-bold text-cyan-300">Codes troubleshooting table</Link>.</p></>
+    body: <><p>Open Setting, find the Codes field, paste one code, and select the green REDEME button. {codeSummary}. Source check: {contentReview.codeSourcesCheckedAt}; cross-source reported, not live-tested here. Several current guides report a like/group gate; follow the live message.</p><p><strong>Success signal:</strong> the client accepts the code and the Cash balance changes. If it fails, use the <Link href="/codes/" className="font-bold text-cyan-300">Codes troubleshooting table</Link>.</p></>
   },
   {
     title: "Establish the income loop",
@@ -60,7 +61,7 @@ const faq = [
 export default function GettingStartedPage() {
   return (
     <GuideArticle
-      eyebrow="Beginner route • reviewed September 6, 2026"
+      eyebrow="Beginner route • reviewed September 9, 2026"
       title="Military Army Tycoon Beginner Guide"
       description="Confirm the Battle Action experience, try the current reported codes, establish visible income, unlock the Barracks, recruit a squad, and learn Follow and Attack before attempting an outpost. Do not buy every pad simply because it is nearby."
       status={<p className="text-sm text-white/70"><strong>Patch-sensitive:</strong> pad prices, squad costs, UI positions, outpost rewards, and Rebirth requirements.</p>}
@@ -75,7 +76,7 @@ export default function GettingStartedPage() {
         "Rebirthing without reading the live prompt."
       ]}
       faq={faq}
-      sourceNotes={<><aside><strong>First-session checklist:</strong> correct game; codes attempted; income reaches collector; Barracks available; squad recruited; Follow tested; recovery Cash retained; capture result checked.</aside><aside><strong>Evidence boundary:</strong> Identity and autosave come from the official description. Codes are cross-source reports. Squad, Orders, and Tent Camp details are dated August 31, 2026 observations. Continue with the <Link href="/guides/how-to-get-cash/" className="font-bold text-cyan-300">Cash guide</Link>, <Link href="/wiki/orders/" className="font-bold text-cyan-300">Orders guide</Link>, or <Link href="/guides/how-to-capture/" className="font-bold text-cyan-300">capture route</Link>.</aside></>}
+      sourceNotes={<><section><h2>First-session checklist</h2><p> correct game; codes attempted; income reaches collector; Barracks available; squad recruited; Follow tested; recovery Cash retained; capture result checked.</p></section><section><h2>Evidence boundary</h2><p> Identity and autosave come from the official description. Codes are cross-source reports. Squad, Orders, and Tent Camp details are dated August 31, 2026 observations.</p></section><nav aria-label="Related guides"><h2>Related guides</h2><p>Continue with the <Link href="/guides/how-to-get-cash/" className="font-bold text-cyan-300">Cash guide</Link>, <Link href="/wiki/orders/" className="font-bold text-cyan-300">Orders guide</Link>, or <Link href="/guides/how-to-capture/" className="font-bold text-cyan-300">capture route</Link>.</p></nav></>}
       breadcrumb="Getting Started"
       route="/guides/getting-started/"
     />

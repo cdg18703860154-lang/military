@@ -10,7 +10,7 @@ export const siteConfig: SiteConfig = {
   description: "Exact-game Military Army Tycoon guides for base economy, squads, Orders, captures, codes, Rebirth, and current Roblox links.",
   valueProposition: "Build the base, stabilize Cash, command squads, and capture strategic locations with an exact-game field guide.",
   shortDisclosure: `${siteBrandName} is an independent fan guide. Roblox and Battle Action remain the official sources for the game, purchases, moderation, and account support.`,
-  lastUpdated: "2026-09-06",
+  lastUpdated: "2026-09-09",
   freshnessLabel: "exact-game evidence check",
   keywords: [
     "military army tycoon",
@@ -34,6 +34,7 @@ export const siteConfig: SiteConfig = {
       label: "Guides",
       href: "/guides",
       items: [
+        { label: "Correct Game Check", href: "/guides/military-army-tycoon-vs-military-tycoon/", description: "Compare developers, Place IDs, codes, and gameplay clues." },
         {
           label: "Getting Started",
           href: "/guides/getting-started",
@@ -73,7 +74,7 @@ export const siteConfig: SiteConfig = {
         {
           label: "Weapons",
           href: "/wiki/weapons",
-          description: "Glock-17 and AK-47 Rifle labels with current evidence limits."
+          description: "Confirmed labels, Intervention Sniper report status, and live weapon checks."
         },
         {
           label: "Orders",
