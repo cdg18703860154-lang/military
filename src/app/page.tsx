@@ -6,8 +6,8 @@ import { currentCodes, currentGameStatus, contentReview, codeSummary } from "@/d
 import { gameConfig } from "@/data/game.config";
 import { siteConfig } from "@/data/site";
 
-const title = "Military Army Tycoon Wiki: Codes, Guides & Updates";
-const description = "Current Military Army Tycoon codes, beginner steps, Orders, outpost capture guidance, Rebirth notes and verified update checks for the Battle Action Roblox game.";
+const title = "Military Army Tycoon Codes, Wiki & Guides";
+const description = "Find reported Military Army Tycoon codes, redemption fixes, squad Orders and beginner guides for Battle Action's Roblox game.";
 
 export const metadata: Metadata = {
   title: { absolute: title },
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 const homeFaq = [
   { q: "Is this the official Military Army Tycoon website?", a: "No. This is an independent fan guide. Roblox and Battle Action remain the official sources for the game, purchases, moderation, account support, and creator announcements." },
   { q: "Which game does this guide cover?", a: "It covers Military Army Tycoon by Battle Action at Roblox Place ID 95409544559668." },
-  { q: "What are the current Military Army Tycoon codes?", a: "BONUS and JOINED are currently reported by multiple sources, with 50,000 Cash reported for each. Check the Codes page for current status and redemption troubleshooting." },
+  { q: "What are the current Military Army Tycoon codes?", a: `${codeSummary}. Reported by current guides; live validity unconfirmed. Check the Codes page for current status and redemption troubleshooting.` },
   { q: "Does Military Army Tycoon save progress?", a: "The official Roblox description says progress is saved automatically." },
   { q: "What does [GAZ Tiger] mean in the title?", a: "It is the suffix shown in the official Roblox title on September 9, 2026. It is not enough evidence to publish a price, unlock route, performance ranking, or complete patch note." },
   { q: "Is there an official Discord or Trello?", a: "This site verified the official Roblox experience and Battle Action group. No accessible creator-controlled Discord or Trello was confirmed during the September 9, 2026 check." }
@@ -64,15 +64,15 @@ export default function HomePage() {
 
       <section data-home-module="tasks">
         <h2>Current Military Army Tycoon codes</h2>
-        <p>{codeSummary}. Source check: {contentReview.codeSourcesCheckedAt}. Status: cross-source reported. This site has not independently redeemed the codes in a live client.</p>
+        <p>Current guides report two code rewards. Source information was reviewed on <strong>{contentReview.codeSourcesCheckedAt}</strong>; this site has not independently redeemed them in-game.</p>
         <div className="mt-5 overflow-x-auto">
           <table>
             <thead><tr><th>Code</th><th>Reported reward</th><th>Current status</th></tr></thead>
-            <tbody>{currentCodes.map((item) => <tr key={item.code}><td><code>{item.code}</code></td><td>{item.reportedReward}</td><td>Cross-source reported</td></tr>)}</tbody>
+            <tbody>{currentCodes.map((item) => <tr key={item.code}><td><code>{item.code}</code></td><td>{item.reportedReward}</td><td>{item.status}</td></tr>)}</tbody>
           </table>
         </div>
-        <p className="mt-4">Several current guides report a like and Battle Action group requirement; others omit it. The official description confirms a free group boost, not a universal code rule. The reported route is Setting → Codes → green REDEME. Follow the live eligibility message.</p>
-        <Link href="/codes/" className="mt-4 inline-flex font-bold text-cyan-300">See redemption steps, Copy buttons, and fixes →</Link>
+        <p className="mt-4">Need help with a rejected code, group requirement or the REDEME button?</p>
+        <Link href="/codes/" className="mt-4 inline-flex font-bold text-cyan-300">Open the code list and redemption fixes →</Link>
 
         <h2 className="mt-10">Start with the task you need</h2>
         <nav aria-label="Choose a guide">
@@ -92,7 +92,8 @@ export default function HomePage() {
       <section data-home-module="fresh">
         <h2>Latest verified status</h2>
         <div className="mt-5">
-          <article><h3>September 9, 2026 — Current title and Codes rechecked</h3><p>The official title still includes [GAZ Tiger]. {codeSummary} remain cross-source reported. The title does not prove vehicle mechanics or a complete patch.</p></article>
+          <article><h3>September 12, 2026 (UTC) — Source check</h3><p>The official title still includes [GAZ Tiger]. A third-party directory reports a September 11 update date, but detailed patch content is unconfirmed. We also reviewed the current code listings and inspected third-party mission screenshots. <Link href="/updates/">Read the evidence and limitations</Link>.</p></article>
+          <article><h3>September 9, 2026 — Current title and Codes rechecked</h3><p>The official title still includes [GAZ Tiger]. BONUS: 50,000 Cash; JOINED: 50,000 Cash remained cross-source reported. The title does not prove vehicle mechanics or a complete patch.</p></article>
           <article><h3>September 7, 2026 — Mission reports remain under review</h3><p>A fan transcription mentions Missions and new units. Direct evidence is insufficient for unlock guides or confirmed records.</p></article><article><h3>September 5, 2026 — Roblox update metadata changed</h3><p>A third-party metadata snapshot lists this update date; detailed patch content remains unconfirmed.</p></article>
           <article><h3>August 31, 2026 — Dated capture walkthrough</h3><p>An exact-game walkthrough documented Follow to Attack and showed a Tent Camp banner with +10% Income. It is not a guarantee for every current outpost.</p></article>
           <article><h3>August 15, 2026 — Public release</h3><p>The official Roblox description lists August 15, 2026 as the public release date.</p></article>

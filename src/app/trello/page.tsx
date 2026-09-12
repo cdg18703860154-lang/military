@@ -50,11 +50,10 @@ const faq = [
 export default function OfficialLinksPage() {
  return (
  <GuideArticle
- eyebrow="Source review • September 9, 2026"
+ eyebrow="Official-link review • September 12, 2026 (UTC)"
  title="Military Army Tycoon Official Links Status"
- description="The two creator-controlled destinations confirmed during the September 9, 2026 review are the official Military Army Tycoon Roblox experience and the Battle Action Roblox group. No accessible creator-controlled Trello, Discord server, official wiki, or detailed patch-note feed was confirmed during this check."
- status={<> <aside className="content-card"><p><strong>{"Last checked:"}</strong>{" September 9, 2026"}</p><p><strong>{"Verified official game:"}</strong>{" Yes"}</p><p><strong>{"Verified creator group:"}</strong>{" Yes"}</p><p><strong>{"Official Trello confirmed:"}</strong>{" No"}</p><p><strong>{"Official Discord confirmed:"}</strong>{" No"}</p><p><strong>{"Official wiki confirmed:"}</strong>{" No"}</p><p><strong>{"Detailed creator patch-note feed confirmed:"}</strong>{" No"}</p></aside>
-<p><code>{"Not confirmed"}</code>{" does not mean a private or newly created destination cannot exist. It means this site did not find a reliable creator-controlled link that it could safely publish."}</p> </>}
+ description="Use the official Military Army Tycoon experience and the Battle Action Roblox group for creator-controlled destinations."
+ status={<><p>Use the <a href="https://www.roblox.com/games/95409544559668/Military-Army-Tycoon">official Military Army Tycoon experience</a> and the <a href="https://www.roblox.com/communities/683115741/Battle-Action">Battle Action Roblox group</a> for creator-controlled destinations.</p><p>During the September 12, 2026 (UTC) review, we could not verify a public creator-linked Trello board or Discord invite. Group announcements requiring an interface we could not read were not reviewed; this is not a claim that no announcements exist.</p><p>Looking for a code? Open the <Link href="/codes/">code list and redemption steps</Link>. A group link verifies the destination, not a guaranteed reward or universal eligibility rule.</p></>}
  beforeSteps={<>
 <section className="content-card">
 <h2>{"Verified official destinations"}</h2>

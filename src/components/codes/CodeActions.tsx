@@ -34,7 +34,7 @@ export function CodeActions({ code, status }: { code: string; status: string }) 
   return (
     <div className="mt-4 flex flex-wrap items-center gap-2">
       <button type="button" onClick={copyCode} aria-label={`Copy ${code}`} className="button-primary button-small">
-        Copy code
+        Copy {code}
       </button>
       <button type="button" onClick={() => recordFeedback("worked")} className="button-secondary button-small" aria-label={`Report ${code} worked`} aria-pressed={feedback === "worked"}>
         Worked for me

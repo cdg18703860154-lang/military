@@ -19,15 +19,15 @@ const faq = [
   },
   {
     "q": "Are Missions confirmed?",
-    "a": "Not to this site’s publication standard. A recent fan transcription reports Missions, but the direct source and independent confirmation were not obtained."
+    "a": "Third-party stills show a Missions interface and a mission-required message. We have not independently verified the original video's date, the complete process or the current unlock conditions. This supports a limited interface note, not a complete current-version Missions guide."
   },
   {
     "q": "Are Intervention Sniper and Riot Squad confirmed?",
     "a": "No. They remain single-source reports and are not in the confirmed Weapons or Squads tables."
   },
   {
-    "q": "Are BONUS and JOINED still current?",
-    "a": "Multiple sources checked through September 9 continue to list both, each for 50,000 Cash. This site has not independently redeemed them."
+    "q": "Are Bonus and Joined still current?",
+    "a": "The same two names are reported by current guides. See the dedicated Codes page for current source status; this site has not independently redeemed them."
   },
   {
     "q": "Why does the code button say REDEME?",
@@ -46,14 +46,22 @@ const faq = [
 export default function UpdatesPage() {
  return (
  <GuideArticle
- eyebrow="Source review • September 9, 2026"
+ eyebrow="Source review • September 12, 2026 (UTC)"
  title="Military Army Tycoon Updates"
  description="This is an independent verification log, not an official patch-note feed. It records current official-page changes, dated gameplay observations, cross-source code checks, and reports that still lack enough evidence for a guide."
- status={<> <aside className="content-card"><p><strong>{"Last checked:"}</strong>{" September 9, 2026"}</p><p><strong>{"Current official title:"}</strong>{" Military Army Tycoon [GAZ Tiger]"}</p><p><strong>{"Accessible detailed creator changelog:"}</strong>{" Not confirmed"}</p><p><strong>{"Verified creator destinations:"}</strong>{" Official Roblox experience and Battle Action group"}</p></aside> </>}
+ status={<> <aside className="content-card"><p><strong>{"Last checked:"}</strong>{" September 12, 2026 (UTC)"}</p><p><strong>{"Current official title:"}</strong>{" Military Army Tycoon [GAZ Tiger]"}</p><p><strong>{"Accessible detailed creator changelog:"}</strong>{" Not confirmed"}</p><p><strong>{"Verified creator destinations:"}</strong>{" Official Roblox experience and Battle Action group"}</p></aside> </>}
  beforeSteps={<>
 <section className="content-card">
 <h2>{"Current status summary"}</h2>
-<div className="mt-4 overflow-x-auto" role="region" aria-label="Reference table" tabIndex={0}><table><thead><tr><th scope="col">{"Topic"}</th><th scope="col">{"Current status"}</th><th scope="col">{"Evidence date"}</th></tr></thead><tbody><tr><td>{"Official title"}</td><td><code>{"[GAZ Tiger]"}</code>{" still displayed"}</td><td>{"Checked September 9, 2026"}</td></tr><tr><td>{"Roblox metadata update"}</td><td>{"A current metadata tracker lists "}<code>{"Updated: 2026-09-05"}</code></td><td>{"Snapshot checked September 9"}</td></tr><tr><td><Link href="/codes/">{"Codes"}</Link></td><td><code>{"BONUS"}</code>{" and "}<code>{"JOINED"}</code>{", 50,000 Cash each, cross-source reported"}</td><td>{"Sources checked through September 9"}</td></tr><tr><td>{"Code button"}</td><td>{"Several current guides show "}<code>{"REDEME"}</code></td><td>{"September 5–9 sources"}</td></tr><tr><td>{"Group/like gate"}</td><td>{"Reported by several current screenshot-based guides; omitted by others"}</td><td>{"Unresolved"}</td></tr><tr><td>{"Missions"}</td><td>{"Recent third-party video transcription reports a Missions board and named unlocks"}</td><td>{"Single-source report under review"}</td></tr><tr><td>{"GAZ Tiger mechanics"}</td><td>{"Title suffix confirmed; unlock, price, stats, and controls unconfirmed"}</td><td>{"September 9"}</td></tr><tr><td>{"Rebirth"}</td><td>{"August 30 prompt record only"}</td><td>{"Current prompt not rechecked"}</td></tr><tr><td>{"Tent Camp reward"}</td><td>{"August 31 dated "}<code>{"+10% Income"}</code>{" observation"}</td><td>{"Current reward not independently rechecked"}</td></tr></tbody></table></div>
+<div className="mt-4 overflow-x-auto" role="region" aria-label="Reference table" tabIndex={0}><table><thead><tr><th scope="col">{"Topic"}</th><th scope="col">{"Current status"}</th><th scope="col">{"Evidence date"}</th></tr></thead><tbody><tr><td>Official title</td><td>[GAZ Tiger] remains on the official page</td><td>Checked September 12 UTC</td></tr><tr><td>Latest update date</td><td>A third-party directory reports September 11; detailed patch content unconfirmed.</td><td>Directory timestamp, not patch notes</td></tr><tr><td><Link href="/codes/">Codes</Link></td><td>Same two reported names; see the dedicated Codes page for current source status.</td><td>Source review, not a live test</td></tr><tr><td>{"Code button"}</td><td>{"Several current guides show "}<code>{"REDEME"}</code></td><td>{"September 5–9 sources"}</td></tr><tr><td>{"Group/like gate"}</td><td>{"Reported by several current screenshot-based guides; omitted by others"}</td><td>{"Unresolved"}</td></tr><tr><td>Missions</td><td>Third-party stills inspected; original video sequence and current unlock conditions unverified.</td><td>Reviewed September 12 UTC</td></tr><tr><td>{"GAZ Tiger mechanics"}</td><td>{"Title suffix confirmed; unlock, price, stats, and controls unconfirmed"}</td><td>{"September 9"}</td></tr><tr><td>{"Rebirth"}</td><td>{"August 30 prompt record only"}</td><td>{"Current prompt not rechecked"}</td></tr><tr><td>{"Tent Camp reward"}</td><td>{"August 31 dated "}<code>{"+10% Income"}</code>{" observation"}</td><td>{"Current reward not independently rechecked"}</td></tr></tbody></table></div>
+</section>
+<section className="content-card">
+<h2>September 12, 2026 (UTC) — Source review</h2>
+<p>The official title still reads <strong>Military Army Tycoon [GAZ Tiger]</strong>. A third-party Roblox game directory now displays an update date of <strong>September 11</strong>. This is a directory-reported timestamp, not a creator changelog or proof of which features changed.</p>
+<p>Current code trackers continue to list the same two code names. No newly published code was confirmed in this review. See the <Link href="/codes/">code status and redemption steps</Link> rather than treating a refreshed article date as a new code release.</p>
+<h3>What changed in the Missions evidence?</h3>
+<p>We can now read two still images hosted by a third-party guide: a Missions panel and a pad-rejection message. This is more evidence than a text transcription alone, but the original video’s publication date, full sequence and applicability to the current build remain unverified.</p>
+<p>The images support a limited reading of the displayed interface. They do not establish a complete unlock guide, a new update date or guaranteed rewards. Mission requirements and Rebirth requirements should not be treated as interchangeable.</p>
 </section>
 <section className="content-card">
 <h2>{"September 9, 2026 — Current title and Codes rechecked"}</h2>
@@ -68,7 +76,7 @@ export default function UpdatesPage() {
 </section>
 </>}
  faq={faq}
- sourceNotes={<> <details data-claim-group="current-source-review"><summary>Sources and verification</summary><p>Source review: September 9, 2026. Code rewards are reported by multiple sources; this site has not completed a live-client redemption.</p><ul><li><a href="https://www.roblox.com/games/95409544559668/Military-Army-Tycoon">Official Battle Action experience</a></li><li><a href="https://www.roblox.com/communities/683115741/Battle-Action">Battle Action group</a></li><li><a href="https://robloxden.com/game-codes/military-army-tycoon">RobloxDen code list</a></li><li><a href="https://www.destructoid.com/military-army-tycoon-codes/">Destructoid redemption guide</a></li><li><a href="https://op.gg/roblox/games/10698216738">OP.GG metadata snapshot (not patch notes)</a></li><li><a href="https://militaryarmytycoon.online/missions/">September 7 fan transcription (unconfirmed lead)</a></li><li><a href="/sources/">Sources and editorial method</a></li></ul></details><nav aria-label="Related guides"><h2>Related guides</h2><ul><li><Link href="/guides/military-army-tycoon-vs-military-tycoon/">Identify the correct Roblox game</Link></li><li><Link href="/codes/">Current codes</Link></li><li><Link href="/guides/getting-started/">Beginner route</Link></li><li><Link href="/guides/how-to-get-cash/">Cash progression</Link></li><li><Link href="/guides/how-to-capture/">Capture an outpost</Link></li><li><Link href="/trello/">Verified official links</Link></li><li><Link href="/sources/">Sources and editorial method</Link></li></ul></nav> </>}
+ sourceNotes={<> <details data-claim-group="current-source-review"><summary>Sources and verification</summary><p>Source review: September 12, 2026 (UTC). Code rewards are reported by multiple sources; this site has not completed a live-client redemption.</p><ul><li><a href="https://www.roblox.com/games/95409544559668/Military-Army-Tycoon">Official Battle Action experience</a></li><li><a href="https://www.roblox.com/communities/683115741/Battle-Action">Battle Action group</a></li><li><a href="https://robloxden.com/game-codes/military-army-tycoon">RobloxDen code list</a></li><li><a href="https://www.destructoid.com/military-army-tycoon-codes/">Destructoid redemption guide</a></li><li><a href="https://op.gg/roblox/games/10698216738">OP.GG metadata snapshot (not patch notes)</a></li><li><a href="https://militaryarmytycoon.online/missions/">September 7 fan transcription (unconfirmed lead)</a></li><li><a href="https://game.roblox-jp.com/en/Simulation/release/page=1">Third-party directory update timestamp</a></li><li><a href="https://militaryarmytycoon.online/screenshots/gameplay/ui-missions.jpg">Missions panel — third-party still</a></li><li><a href="https://militaryarmytycoon.online/screenshots/gameplay/pad-rebirth-gated.jpg">Mission-required message — third-party still</a></li><li><a href="/sources/">Sources and editorial method</a></li></ul></details><nav aria-label="Related guides"><h2>Related guides</h2><ul><li><Link href="/guides/military-army-tycoon-vs-military-tycoon/">Identify the correct Roblox game</Link></li><li><Link href="/codes/">Current codes</Link></li><li><Link href="/guides/getting-started/">Beginner route</Link></li><li><Link href="/guides/how-to-get-cash/">Cash progression</Link></li><li><Link href="/guides/how-to-capture/">Capture an outpost</Link></li><li><Link href="/trello/">Verified official links</Link></li><li><Link href="/sources/">Sources and editorial method</Link></li></ul></nav> </>}
  breadcrumb="Updates"
  route={route}
  family="guide"
@@ -107,8 +115,8 @@ export default function UpdatesPage() {
 </section>
 <section className="content-card">
 <h2>{"What remains unconfirmed"}</h2>
-<p>{"As of September 9, 2026, this site has not confirmed:"}</p>
-<ul><li>{"an accessible creator-controlled detailed changelog;"}</li><li>{"an official Trello;"}</li><li>{"an accessible official Discord;"}</li><li>{"GAZ Tiger unlock, cost, controls, or stats;"}</li><li>{"the Missions interface through direct evidence;"}</li><li>{"Ural Truck mission details;"}</li><li>{"Intervention Sniper availability or unlock;"}</li><li>{"Riot Squad and Bizon Squad unlocks;"}</li><li>{"a complete current squad roster;"}</li><li>{"a complete weapon list;"}</li><li>{"current weapon statistics;"}</li><li>{"every outpost reward;"}</li><li>{"outpost reward stacking;"}</li><li>{"the current Rebirth requirement, benefit, and complete reset;"}</li><li>{"a universal best squad or weapon."}</li></ul>
+<p>{"As of September 12, 2026 (UTC), this site has not confirmed:"}</p>
+<ul><li>{"an accessible creator-controlled detailed changelog;"}</li><li>{"an official Trello;"}</li><li>{"an accessible official Discord;"}</li><li>{"GAZ Tiger unlock, cost, controls, or stats;"}</li><li>{"the original Missions video date, complete process or current unlock conditions;"}</li><li>{"Ural Truck mission details;"}</li><li>{"Intervention Sniper availability or unlock;"}</li><li>{"Riot Squad and Bizon Squad unlocks;"}</li><li>{"a complete current squad roster;"}</li><li>{"a complete weapon list;"}</li><li>{"current weapon statistics;"}</li><li>{"every outpost reward;"}</li><li>{"outpost reward stacking;"}</li><li>{"the current Rebirth requirement, benefit, and complete reset;"}</li><li>{"a universal best squad or weapon."}</li></ul>
 <p><code>{"Not confirmed"}</code>{" means the source threshold was not met. It does not mean a feature is impossible."}</p>
 </section>
 <section className="content-card">

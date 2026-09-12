@@ -1,4 +1,4 @@
-import { codeSummary, contentReview } from "@/data/current-content";
+import { currentCodes, codeSummary, contentReview } from "@/data/current-content";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { GuideArticle } from "@/components/content/GuideArticle";
@@ -6,7 +6,7 @@ import { siteConfig } from "@/data/site";
 import { CurrentCodeTable } from "@/components/codes/CurrentCodeTable";
 
 const title = "Military Army Tycoon Codes (September 2026)";
-const description = "Use the latest Military Army Tycoon codes for free Cash, see the current REDEME steps, group requirement evidence, failure fixes and verification dates.";
+const description = "Find the two reported Military Army Tycoon codes, Cash rewards, redemption steps and fixes for group requirements or a code that does not work.";
 const route = "/codes/";
 export const metadata: Metadata = {
  title: { absolute: title }, description,
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 const faq = [
   {
     "q": "What are the current Military Army Tycoon codes?",
-    "a": "BONUS and JOINED are the two current cross-source reported codes as of September 9, 2026."
+    "a": `${codeSummary}. Source review: ${contentReview.codeSourcesCheckedAt}; live validity unconfirmed.`
   },
   {
     "q": "How much Cash does each code give?",
@@ -33,7 +33,7 @@ const faq = [
   },
   {
     "q": "Are the codes case-sensitive?",
-    "a": "Current sources display the strings as BONUS and JOINED. Copy them exactly instead of testing different capitalization."
+    "a": "Some publishers display the same names in uppercase. This page follows the spelling displayed by the newer tracker. We have not independently established how the game handles letter case."
   },
   {
     "q": "Have these codes been tested by this site today?",
@@ -60,40 +60,36 @@ const faq = [
 export default function CodesPage() {
  return (
  <GuideArticle
- eyebrow="Source review • September 9, 2026"
+ eyebrow="Source review • September 12, 2026 (UTC)"
  title="Military Army Tycoon Codes"
- description={`${codeSummary}. Source check: ${contentReview.codeSourcesCheckedAt}. Cross-source reported; this site has not independently redeemed either code in a live client.`}
- status={<> <aside className="content-card"><p><strong>{"Source check:"}</strong>{" September 9, 2026"}</p><p><strong>{"Status:"}</strong>{" Cross-source reported"}</p><p><strong>{"Independent live-client test by this site:"}</strong>{" Not completed"}</p><p><strong>{"Developer-controlled code announcement located:"}</strong>{" No"}</p><p><strong>{"Confirmed expired codes:"}</strong>{" None"}</p></aside> </>}
+ description={`Current code guides list ${currentCodes.map((item) => item.code).join(" and ")}, with ${currentCodes[0].reportedReward} reported for each. Copy one code at a time and check the game’s response before trying the other.`}
+ status={<aside className="content-card"><p><strong>Source review: {contentReview.codeSourcesCheckedAt}.</strong> The latest explicitly dated tracker check reviewed was September 11. Current validity has not been independently verified in-game by this site.</p></aside>}
  beforeSteps={<>
 <section className="content-card">
 <h2>{"Current Military Army Tycoon codes"}</h2>
 <CurrentCodeTable />
-<p>{"Copy the code exactly as displayed. Do not add spaces before or after it."}</p>
+<p>{"Some publishers display the same names in uppercase. This page follows the spelling displayed by the newer tracker. We have not independently established how the game handles letter case."}</p>
 </section>
 <section className="content-card">
-<h2>{"Before you redeem a code"}</h2>
-<p>{"Several current screenshot-based guides say the game asks players to "}<strong>{"like the experience and join the Battle Action Roblox group"}</strong>{" before using codes. Other current guides show the normal Settings route without mentioning that requirement."}</p>
-<p>{"The official Roblox description confirms that joining Battle Action grants a free in-game boost, but it does not publish a universal code-eligibility rule. The safest current sequence is:"}</p>
-<ol><li>{"Confirm that you opened the Battle Action experience."}</li><li>{"Like the experience if the live page asks you to."}</li><li>{"Join only the verified Battle Action Roblox group."}</li><li>{"Rejoin Military Army Tycoon."}</li><li>{"Wait for your plot and Cash display to load."}</li><li>{"Redeem one code at a time."}</li></ol>
-<p>{"Treat the live game message as the final account-specific instruction. Do not join an unofficial group from a copied guide, Discord invite, or search advertisement."}</p>
+<h2>Do I need to join the group before redeeming?</h2>
+<p>RobloxDen and Destructoid instruct players to like the experience and join <strong>Battle Action</strong> before redeeming. The official description confirms a free group boost, but does not explain every code-eligibility condition.</p>
+<p>A guide that omits this step is not proof that the requirement does not exist. Follow any eligibility message shown by your game, use the <a href="https://www.roblox.com/communities/683115741/Battle-Action">verified Battle Action group</a>, and rejoin before trying again. Do not join an unrelated group just because it promises a code reward.</p>
 </section>
 </>}
  faq={faq}
- sourceNotes={<> <details data-claim-group="current-source-review"><summary>Sources and verification</summary><p>Source review: September 9, 2026. Code rewards are reported by multiple sources; this site has not completed a live-client redemption.</p><ul><li><a href="https://www.roblox.com/games/95409544559668/Military-Army-Tycoon">Official Battle Action experience</a></li><li><a href="https://www.roblox.com/communities/683115741/Battle-Action">Battle Action group</a></li><li><a href="https://robloxden.com/game-codes/military-army-tycoon">RobloxDen code list</a></li><li><a href="https://www.destructoid.com/military-army-tycoon-codes/">Destructoid redemption guide</a></li><li><a href="/sources/">Sources and editorial method</a></li></ul></details><nav aria-label="Related guides"><h2>Related guides</h2><ul><li><Link href="/guides/military-army-tycoon-vs-military-tycoon/">Identify the correct Roblox game</Link></li><li><Link href="/guides/getting-started/">Beginner route</Link></li><li><Link href="/guides/how-to-get-cash/">Cash progression</Link></li><li><Link href="/guides/how-to-capture/">Capture an outpost</Link></li><li><Link href="/trello/">Verified official links</Link></li><li><Link href="/sources/">Sources and editorial method</Link></li></ul></nav> </>}
+ sourceNotes={<> <details data-claim-group="current-source-review"><summary>Sources and verification</summary><p>Source review: September 12, 2026 (UTC). Code rewards are reported by multiple sources; this site has not completed a live-client redemption.</p><ul><li><a href="https://www.roblox.com/games/95409544559668/Military-Army-Tycoon">Official Battle Action experience</a></li><li><a href="https://www.roblox.com/communities/683115741/Battle-Action">Battle Action group</a></li><li><a href="https://robloxden.com/game-codes/military-army-tycoon">RobloxDen code list</a></li><li><a href="https://www.destructoid.com/military-army-tycoon-codes/">Destructoid redemption guide</a></li><li><a href="https://progameguides.com/roblox/military-tycoon-codes/">Pro Game Guides code comparison</a></li><li><a href="https://www.roburo.jp/games/95409544559668/military-army-tycoon/">Roburo code record</a></li><li><a href="/sources/">Sources and editorial method</a></li></ul></details><nav aria-label="Related guides"><h2>Related guides</h2><ul><li><Link href="/guides/military-army-tycoon-vs-military-tycoon/">Identify the correct Roblox game</Link></li><li><Link href="/guides/getting-started/">Beginner route</Link></li><li><Link href="/guides/how-to-get-cash/">Cash progression</Link></li><li><Link href="/guides/how-to-capture/">Capture an outpost</Link></li><li><Link href="/trello/">Verified official links</Link></li><li><Link href="/sources/">Sources and editorial method</Link></li></ul></nav> </>}
  breadcrumb="Codes"
  route={route}
  family="guide"
  >
 <section className="content-card">
-<h2>{"How to redeem Military Army Tycoon codes"}</h2>
-<ol><li>{"Open "}<strong>{"Military Army Tycoon [GAZ Tiger]"}</strong>{" by "}<strong>{"Battle Action"}</strong>{" on Roblox."}</li><li>{"Confirm the URL uses Place ID "}<code>{"95409544559668"}</code>{"."}</li><li>{"Wait until your plot, HUD, and Cash balance are visible."}</li><li>{"Select the "}<strong>{"Setting"}</strong>{" icon on the left side of the screen."}</li><li>{"Find the Codes field in the Settings window."}</li><li>{"Paste "}<code>{"BONUS"}</code>{" or "}<code>{"JOINED"}</code>{"."}</li><li>{"Select the green "}<strong>{"REDEME"}</strong>{" button."}</li></ol>
-<p><code>{"REDEME"}</code>{" is the spelling shown in several September 2026 screenshots and current redemption guides. Some articles normalize it to "}<code>{"Redeem"}</code>{". If the live button label changes after an update, follow the live interface rather than an old screenshot."}</p>
-<p><strong>{"Success signal:"}</strong>{" The client accepts the entry and the Cash balance or reward message changes."}</p>
-<p>{"Before pressing the button, note your current Cash. Compare the balance after redemption so you can tell whether the reward was applied."}</p>
+<h2>How to redeem a code</h2>
+<ol><li>Open <a href="https://www.roblox.com/games/95409544559668/Military-Army-Tycoon">Military Army Tycoon by Battle Action</a>.</li><li>Wait for the game interface to load and note your Cash balance.</li><li>Open <strong>Setting / Settings</strong> on the left side, then find the Codes field.</li><li>Paste one code without leading or trailing spaces.</li><li>Press the green redemption button. Current guides show the in-game spelling <strong>REDEME</strong>; some articles write “Redeem.”</li><li>Read the response and compare your balance before submitting the second code.</li></ol>
+<p>A copied code is not a redeemed code. Only the game’s response can confirm what happened to your account.</p>
 </section>
 <section className="content-card">
 <h2>{"Why is my Military Army Tycoon code not working?"}</h2>
-<div className="mt-4 overflow-x-auto" role="region" aria-label="Reference table" tabIndex={0}><table><thead><tr><th scope="col">{"What happens"}</th><th scope="col">{"Most likely reason"}</th><th scope="col">{"What to do"}</th></tr></thead><tbody><tr><td>{"Nothing happens after pressing the button"}</td><td>{"The HUD or plot may not be fully loaded"}</td><td>{"Close Settings, wait for the plot and Cash display, then try once more"}</td></tr><tr><td>{"The game shows an invalid message"}</td><td>{"Typo, extra space, changed code status, or wrong game"}</td><td>{"Use the Copy button and confirm Battle Action plus Place ID "}<code>{"95409544559668"}</code></td></tr><tr><td>{"The game shows an eligibility or group message"}</td><td>{"The current account may need to like the experience or join Battle Action"}</td><td>{"Use only the verified group, rejoin the game, and retry once"}</td></tr><tr><td>{"The code was already used"}</td><td>{"The account may have redeemed it previously"}</td><td>{"Try the other current code; do not repeatedly submit the same string"}</td></tr><tr><td>{"The button says something other than REDEME"}</td><td>{"The interface may have changed, or you may be in another game"}</td><td>{"Check the developer and Place ID before following the guide"}</td></tr><tr><td>{"There is no Setting or Codes field"}</td><td>{"Wrong experience, delayed load, or a UI update"}</td><td>{"Reopen the official Battle Action game and wait for the HUD"}</td></tr><tr><td>{"The Cash total does not change"}</td><td>{"Redemption failed, the display is delayed, or the reward was already applied"}</td><td>{"Record the before/after value, rejoin once, and read the live message"}</td></tr><tr><td>{"Another guide lists Diamond, crate, or vehicle codes"}</td><td>{"It probably covers the older Military Tycoon or another similarly named game"}</td><td>{"Use the game-comparison guide before pasting any code"}</td></tr><tr><td>{"A single player says the code expired"}</td><td>{"One failed report does not establish expiry"}</td><td>{"Check the current source date and wait for repeated exact-game evidence"}</td></tr></tbody></table></div>
+<div className="mt-4 overflow-x-auto" role="region" aria-label="Reference table" tabIndex={0}><table><thead><tr><th scope="col">{"What happens"}</th><th scope="col">{"Most likely reason"}</th><th scope="col">{"What to do"}</th></tr></thead><tbody><tr><td>{"Nothing happens after pressing the button"}</td><td>{"The HUD or plot may not be fully loaded"}</td><td>{"Close Settings, wait for the plot and Cash display, then try once more"}</td></tr><tr><td>The entry is rejected</td><td>Read the account-specific response</td><td>Remove spaces, check the displayed spelling, and confirm the developer and Place ID. A single rejection does not establish expiry.</td></tr><tr><td>The game asks for group membership</td><td>Read the account-specific response</td><td>Use the verified Battle Action group, rejoin, then retry once.</td></tr><tr><td>A notice says the code was already claimed</td><td>Read the account-specific response</td><td>Check the other code instead of repeatedly submitting the same one.</td></tr><tr><td>The menu does not match this guide</td><td>Read the account-specific response</td><td>Use the <Link href="/guides/military-army-tycoon-vs-military-tycoon/">correct-game comparison</Link> before using another code list.</td></tr><tr><td>{"There is no Setting or Codes field"}</td><td>{"Wrong experience, delayed load, or a UI update"}</td><td>{"Reopen the official Battle Action game and wait for the HUD"}</td></tr><tr><td>The balance does not change</td><td>Read the account-specific response</td><td>Check the response and before/after balance. Do not assume copying the text awarded Cash.</td></tr><tr><td>{"Another guide lists Diamond, crate, or vehicle codes"}</td><td>{"It probably covers the older Military Tycoon or another similarly named game"}</td><td>{"Use the game-comparison guide before pasting any code"}</td></tr><tr><td>{"A single player says the code expired"}</td><td>{"One failed report does not establish expiry"}</td><td>{"Check the current source date and wait for repeated exact-game evidence"}</td></tr></tbody></table></div>
 </section>
 <section className="content-card">
 <h2>{"How to verify that you are in the correct game"}</h2>
@@ -114,16 +110,16 @@ export default function CodesPage() {
 </section>
 <section className="content-card">
 <h2>{"Expired Military Army Tycoon codes"}</h2>
-<p>{"No code is consistently listed as expired in the current sources reviewed on September 9, 2026."}</p>
+<p>{"No code is consistently listed as expired in the current sources reviewed on September 12, 2026 (UTC)."}</p>
 <p>{"A code should move to this section only when at least one of the following is available:"}</p>
 <ul><li>{"a creator-controlled expiry announcement;"}</li><li>{"repeated recent live-client failures tied to the correct Battle Action experience;"}</li><li>{"several current independent sources moving the same string to expired;"}</li><li>{"a replacement code or update that clearly invalidates the old one."}</li></ul>
-<p>{"A single anonymous failure report is not enough."}</p>
+<p>{"A single anonymous failure report is not enough."}</p><p>We did not find a developer-controlled expiry announcement or a verified expiry record for either code in this review. That means <strong>expiry is not confirmed</strong>, not that the codes are guaranteed to work indefinitely.</p><p>After a successful redemption, continue with the <Link href="/guides/getting-started/">first-session route</Link> or the <Link href="/guides/how-to-get-cash/">Cash guide</Link>. Those guides explain the next task without requiring a separate article for each code.</p>
 </section>
 <section className="content-card">
 <h2>{"Where new codes may appear"}</h2>
 <p>{"The safest places to check first are:"}</p>
 <ol><li>{"The official Military Army Tycoon Roblox experience."}</li><li>{"The verified Battle Action Roblox group."}</li><li>{"The live Settings interface."}</li><li>{"Current code sources that show an exact check date and the correct game identity."}</li></ol>
-<p>{"No accessible creator-controlled Discord, Trello, or detailed code announcement was confirmed during the September 9 review. Do not trust a link solely because a fan page calls it official."}</p>
+<p>{"No accessible creator-controlled Discord, Trello, or detailed code announcement was confirmed during the September 12 review. Do not trust a link solely because a fan page calls it official."}</p>
 </section>
  </GuideArticle>
  );

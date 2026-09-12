@@ -3,7 +3,7 @@ import { AdsterraArticleBottom, AdsterraArticleMid, AdsterraArticleTop } from "@
 import { BreadcrumbJsonLd, FaqJsonLd } from "@/components/seo/JsonLd";
 import { PageIntro } from "@/components/ui/content";
 
-export type GuideFaq = { q: string; a: string };
+export type GuideFaq = { q: string; a: string; answer?: ReactNode; includeInSchema?: boolean };
 export type GuideStep = { title: string; body: ReactNode };
 
 export function GuideArticle({
@@ -69,11 +69,11 @@ export function GuideArticle({
 
       <section data-guide-faq>
         <h2>Frequently asked questions</h2>
-        {faq.map((item) => <article key={item.q}><h3>{item.q}</h3><p>{item.a}</p></article>)}
+        {faq.map((item) => <article key={item.q}><h3>{item.q}</h3>{item.answer ?? <p>{item.a}</p>}</article>)}
       </section>
 
       <section data-source-notes>{sourceNotes}</section>
-      <FaqJsonLd items={faq} />
+      <FaqJsonLd items={faq.filter((item) => item.includeInSchema !== false)} />
       <BreadcrumbJsonLd items={[{ name: "Home", href: "/" }, { name: breadcrumb, href: route }]} />
     </main>
   );

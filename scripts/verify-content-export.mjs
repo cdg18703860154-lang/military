@@ -5,7 +5,7 @@ import path from "node:path";
 const baseUrl = "https://military-armytycoon.wiki";
 const outputRoot = path.resolve("out");
 const pages = {
-  "/": ["Military Army Tycoon Wiki: Codes, Guides & Updates", "Military Army Tycoon Wiki"],
+  "/": ["Military Army Tycoon Codes, Wiki & Guides", "Military Army Tycoon Wiki"],
   "/codes/": ["Military Army Tycoon Codes (September 2026)", "Military Army Tycoon Codes"],
   "/guides/military-army-tycoon-vs-military-tycoon/": ["Military Army Tycoon vs Military Tycoon: Correct Roblox Game", "Military Army Tycoon vs Military Tycoon"],
   "/guides/": ["Military Army Tycoon Guides", "Military Army Tycoon Guides"],
@@ -71,8 +71,8 @@ for (const [route, [expectedTitle, expectedH1]] of Object.entries(pages)) {
 }
 
 const allHtml = (await Promise.all(Object.keys(pages).map((route) => readFile(fileForRoute(route), "utf8")))).join("\n");
-assert.match(allHtml, />BONUS</);
-assert.match(allHtml, />JOINED</);
+assert.match(allHtml, />Bonus</);
+assert.match(allHtml, />Joined</);
 
 for (const link of allHtml.matchAll(/<a\b[^>]*href="(\/[^"]*)"/gi)) {
   const href = link[1].split(/[?#]/, 1)[0];

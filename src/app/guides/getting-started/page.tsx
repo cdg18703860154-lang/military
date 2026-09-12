@@ -1,4 +1,3 @@
-import { contentReview, codeSummary } from "@/data/current-content";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { GuideArticle, type GuideStep } from "@/components/content/GuideArticle";
@@ -21,7 +20,7 @@ const steps: GuideStep[] = [
   },
   {
     title: "Redeem the current reported codes",
-    body: <><p>Open Setting, find the Codes field, paste one code, and select the green REDEME button. {codeSummary}. Source check: {contentReview.codeSourcesCheckedAt}; cross-source reported, not live-tested here. Several current guides report a like/group gate; follow the live message.</p><p><strong>Success signal:</strong> the client accepts the code and the Cash balance changes. If it fails, use the <Link href="/codes/" className="font-bold text-cyan-300">Codes troubleshooting table</Link>.</p></>
+    body: <p>Open the <Link href="/codes/">current code list and redemption steps</Link> before spending your opening Cash. Follow any group-eligibility message in the game, redeem one code at a time and check the result before trying the next. The code page carries the current source date; this route does not claim a separate live redemption test.</p>
   },
   {
     title: "Establish the income loop",
