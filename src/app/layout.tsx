@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { Inter } from "next/font/google";
 import Script from "next/script";
-import { AdsterraPopunderGate, AdsterraSmartLink, AdsterraSocialBarGate } from "@/components/ads";
+import { AdsterraBottomSticky, AdsterraGlobalAds } from "@/components/ads";
 import { GoogleAnalyticsPageView } from "@/components/analytics/GoogleAnalyticsPageView";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
@@ -83,12 +83,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             </Suspense>
           </>
         ) : null}
-        <AdsterraPopunderGate />
-        <AdsterraSocialBarGate />
-        <AdsterraSmartLink />
+        <AdsterraGlobalAds />
         <Navbar />
         <PageScaffold>{children}</PageScaffold>
         <Footer />
+        <AdsterraBottomSticky />
       </body>
     </html>
   );

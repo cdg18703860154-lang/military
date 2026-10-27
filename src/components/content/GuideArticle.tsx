@@ -21,7 +21,7 @@ export function GuideArticle({
   breadcrumb,
   route,
   family = "guide"
-}: {
+, afterTitle}: {
   eyebrow: string;
   title: string;
   description: string;
@@ -36,11 +36,11 @@ export function GuideArticle({
   breadcrumb: string;
   route: string;
   family?: "guide" | "wiki";
-}) {
+ afterTitle?: ReactNode; }) {
   return (
     <main data-asset-family={family} data-page-role="guide-how-to" className="mx-auto max-w-4xl px-4 py-10">
       <section data-first-screen-answer>
-        <PageIntro eyebrow={eyebrow} title={title} description={description}>
+        <PageIntro eyebrow={eyebrow} title={title} description={description} afterTitle={afterTitle}>
           {status}
         </PageIntro>
       </section>

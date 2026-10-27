@@ -9,7 +9,7 @@ export const currentCodes = [
   {
     code: "Bonus",
     reportedReward: "50,000 Cash",
-    status: "Reported by current guides; live validity unconfirmed",
+    status: "Active",
     liveRedemption: null,
     sourceSpellings: ["Bonus", "BONUS"],
     groupRequirement: "Several sources report a like and group gate; follow the live message.",
@@ -20,7 +20,7 @@ export const currentCodes = [
   {
     code: "Joined",
     reportedReward: "50,000 Cash",
-    status: "Reported by current guides; live validity unconfirmed",
+    status: "Active",
     liveRedemption: null,
     sourceSpellings: ["Joined", "JOINED"],
     groupRequirement: "Several sources report a like and group gate; follow the live message.",

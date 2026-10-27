@@ -6,16 +6,17 @@ export function PageIntro({
   title,
   description,
   children
-}: {
+, afterTitle}: {
   eyebrow: string;
   title: string;
   description: string;
   children?: ReactNode;
-}) {
+ afterTitle?: ReactNode; }) {
   return (
     <section className="page-intro">
       <span className="mini-label">{eyebrow}</span>
       <h1 className="mt-3 text-4xl font-extrabold leading-tight text-white md:text-6xl">{title}</h1>
+      {afterTitle}
       <p className="mt-4 max-w-3xl text-lg leading-8 text-white/72">{description}</p>
       {children ? <div className="mt-6">{children}</div> : null}
     </section>

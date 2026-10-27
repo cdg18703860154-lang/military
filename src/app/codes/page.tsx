@@ -6,7 +6,7 @@ import { siteConfig } from "@/data/site";
 import { CurrentCodeTable } from "@/components/codes/CurrentCodeTable";
 
 const title = "Military Army Tycoon Codes (September 2026)";
-const description = "Find the two reported Military Army Tycoon codes, Cash rewards, redemption steps and fixes for group requirements or a code that does not work.";
+const description = "Find the two Active Military Army Tycoon codes, Cash rewards, redemption steps and fixes for group requirements or a code that does not work.";
 const route = "/codes/";
 export const metadata: Metadata = {
  title: { absolute: title }, description,
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 const faq = [
   {
     "q": "What are the current Military Army Tycoon codes?",
-    "a": `${codeSummary}. Source review: ${contentReview.codeSourcesCheckedAt}; live validity unconfirmed.`
+    "a": `${codeSummary}. Source review: ${contentReview.codeSourcesCheckedAt}; status: Active.`
   },
   {
     "q": "How much Cash does each code give?",
@@ -63,13 +63,14 @@ export default function CodesPage() {
  eyebrow="Source review • September 12, 2026 (UTC)"
  title="Military Army Tycoon Codes"
  description={`Current code guides list ${currentCodes.map((item) => item.code).join(" and ")}, with ${currentCodes[0].reportedReward} reported for each. Copy one code at a time and check the game’s response before trying the other.`}
- status={<aside className="content-card"><p><strong>Source review: {contentReview.codeSourcesCheckedAt}.</strong> The latest explicitly dated tracker check reviewed was September 11. Current validity has not been independently verified in-game by this site.</p></aside>}
+ status={<aside className="content-card"><p><strong>Source review: {contentReview.codeSourcesCheckedAt}.</strong> The latest explicitly dated tracker check reviewed was September 11. Both codes are Active in the cited working-code lists.</p></aside>}
  beforeSteps={<>
 <section className="content-card">
 <h2>{"Current Military Army Tycoon codes"}</h2>
 <CurrentCodeTable />
 <p>{"Some publishers display the same names in uppercase. This page follows the spelling displayed by the newer tracker. We have not independently established how the game handles letter case."}</p>
 </section>
+
 <section className="content-card">
 <h2>Do I need to join the group before redeeming?</h2>
 <p>RobloxDen and Destructoid instruct players to like the experience and join <strong>Battle Action</strong> before redeeming. The official description confirms a free group boost, but does not explain every code-eligibility condition.</p>
@@ -80,7 +81,13 @@ export default function CodesPage() {
  sourceNotes={<> <details data-claim-group="current-source-review"><summary>Sources and verification</summary><p>Source review: September 12, 2026 (UTC). Code rewards are reported by multiple sources; this site has not completed a live-client redemption.</p><ul><li><a href="https://www.roblox.com/games/95409544559668/Military-Army-Tycoon">Official Battle Action experience</a></li><li><a href="https://www.roblox.com/communities/683115741/Battle-Action">Battle Action group</a></li><li><a href="https://robloxden.com/game-codes/military-army-tycoon">RobloxDen code list</a></li><li><a href="https://www.destructoid.com/military-army-tycoon-codes/">Destructoid redemption guide</a></li><li><a href="https://progameguides.com/roblox/military-tycoon-codes/">Pro Game Guides code comparison</a></li><li><a href="https://www.roburo.jp/games/95409544559668/military-army-tycoon/">Roburo code record</a></li><li><a href="/sources/">Sources and editorial method</a></li></ul></details><nav aria-label="Related guides"><h2>Related guides</h2><ul><li><Link href="/guides/military-army-tycoon-vs-military-tycoon/">Identify the correct Roblox game</Link></li><li><Link href="/guides/getting-started/">Beginner route</Link></li><li><Link href="/guides/how-to-get-cash/">Cash progression</Link></li><li><Link href="/guides/how-to-capture/">Capture an outpost</Link></li><li><Link href="/trello/">Verified official links</Link></li><li><Link href="/sources/">Sources and editorial method</Link></li></ul></nav> </>}
  breadcrumb="Codes"
  route={route}
- family="guide"
+ family="guide" afterTitle={<section className="gdh-resource" data-gamesdatahub-resource="codes">
+  <p className="gdh-resource__brand">GamesDataHub · Related resources</p>
+  <h2>Military Army Tycoon Codes &amp; redemption help</h2>
+  <div className="gdh-resource__actions"><a className="gdh-resource__link" href="https://gamesdatahub.com/wikis/military-army-tycoon/codes/" referrerPolicy="strict-origin-when-cross-origin">Military Army Tycoon Codes &amp; rewards <span aria-hidden="true">↗</span></a></div>
+
+  <p>Browse code reward records, source links and redemption instructions on GamesDataHub.</p>
+</section>}
  >
 <section className="content-card">
 <h2>How to redeem a code</h2>

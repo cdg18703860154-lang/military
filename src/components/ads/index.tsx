@@ -1,11 +1,13 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { runtimeConfig as sourceRuntimeConfig } from "@/lib/runtime-config";
-import { chooseLeaderboardSize, getAdPageFamily, isCleanAdRoute, normalizeScriptUrl } from "@/lib/ad-layout";
+import { canLoadPopunder, getAdLayoutPolicy, isAdEligibleRoute, normalizeAdUrl, selectBottomBannerSize, selectLeaderboardSize } from "@/lib/ad-layout";
+import { mountAdsterraBanner, type BannerLoadState } from "@/lib/adsterra-banner-loader";
+import { ensureAdDocumentBoundary, installAdDocumentBoundary, isAdDocumentReady } from "@/lib/adsterra-document-boundary";
 
-export const ADSTERRA_RUNTIME_VERSION = "2026-09-06.1";
+export const ADSTERRA_RUNTIME_VERSION = "2026-10-27.2";
 
 // Static sites do not all declare every optional Adsterra field in their
 // environment-derived config type. The generated source can still provide
@@ -23,6 +25,9 @@ type AdsterraRuntimeConfig = {
   adsterraBanner468x60ScriptUrl?: string;
   adsterraBanner728x90Key?: string;
   adsterraBanner728x90ScriptUrl?: string;
+  adsterraBottomMobileKey?: string;
+  adsterraBottomMobileScriptUrl?: string;
+  adsterraEnableBottomSticky?: boolean;
   adsterraEnablePopunder?: boolean;
   adsterraEnableSocialBar?: boolean;
   adsterraEnableStickyRail?: boolean;
@@ -91,6 +96,7 @@ const bannerConfigs: Record<BannerSize, BannerConfig> = {
   }
 };
 
+
 declare global {
   interface Window {
     atOptions?: {
@@ -101,8 +107,13 @@ declare global {
       params: Record<string, unknown>;
     };
     __adsterraBannerQueue?: Promise<void>;
+    __adsterraGlobalsExecuted?: boolean;
     gtag?: (...args: unknown[]) => void;
   }
+}
+
+function normalizeScriptUrl(url?: string) {
+  return normalizeAdUrl(url);
 }
 
 function getBannerScriptUrl(config: BannerConfig) {
@@ -126,43 +137,20 @@ function hasRenderedCreative(host: HTMLElement) {
   return Boolean(host.querySelector("iframe, ins, a[href], img, object, embed"));
 }
 
+function addAccessibleNames(host: HTMLElement) {
+  host.querySelectorAll("iframe").forEach((frame) => {
+    if (!frame.title.trim()) frame.title = "Advertisement";
+  });
+  host.querySelectorAll("a[href]").forEach((link) => {
+    if (!link.textContent?.trim() && !link.getAttribute("aria-label")) {
+      link.setAttribute("aria-label", "Sponsored advertisement");
+    }
+  });
+}
+
 function useCleanAdRoute() {
-  return isCleanAdRoute(usePathname());
-}
-
-function useDesktopArticleRails() {
-  const [enabled, setEnabled] = useState(false);
-  const family = getAdPageFamily(usePathname());
-  useEffect(() => {
-    const query = window.matchMedia("(min-width: 1280px)");
-    const sync = () => setEnabled(query.matches);
-    sync();
-    query.addEventListener("change", sync);
-    return () => query.removeEventListener("change", sync);
-  }, []);
-  return enabled && family === "detail";
-}
-
-function useAdAccessibilityLabels(hostRef: React.RefObject<HTMLElement | null>) {
-  useEffect(() => {
-    const host = hostRef.current;
-    if (!host) return;
-    const labelMarkup = () => {
-      host.querySelectorAll("iframe").forEach((frame) => {
-        if (!frame.title.trim()) frame.title = "Advertisement";
-      });
-      host.querySelectorAll("a").forEach((anchor) => {
-        const imageAlt = anchor.querySelector("img[alt]")?.getAttribute("alt")?.trim();
-        if (!anchor.textContent?.trim() && !anchor.getAttribute("aria-label")?.trim() && !anchor.title.trim() && !imageAlt) {
-          anchor.setAttribute("aria-label", "Advertisement");
-        }
-      });
-    };
-    labelMarkup();
-    const observer = new MutationObserver(labelMarkup);
-    observer.observe(host, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, [hostRef]);
+  const pathname = usePathname();
+  return !pathname || !isAdEligibleRoute(pathname);
 }
 
 function trackAdEvent(eventName: string, payload: Record<string, unknown>) {
@@ -215,151 +203,83 @@ function AdvertisementShell({
   );
 }
 
+const EMPTY_AD_DOCUMENT = '<!doctype html><html><head><meta charset="utf-8"></head><body style="margin:0;overflow:hidden"><div id="adsterra-slot"></div></body></html>';
+
 function AdsterraBannerUnit({
   className = "",
+  onEmpty,
   slotName,
-  size
+  size,
+  configOverride,
+  eager = false
 }: {
   className?: string;
+  onEmpty?: () => void;
   slotName?: string;
   size: BannerSize;
+  configOverride?: BannerConfig;
+  eager?: boolean;
 }) {
+  const cleanAdRoute = useCleanAdRoute();
   const hostRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLIFrameElement>(null);
+  const cleanupRef = useRef<() => void>(() => {});
   const [renderState, setRenderState] = useState<AdRenderState>("loading");
-  const config = bannerConfigs[size];
+  const config = configOverride || bannerConfigs[size];
   const scriptUrl = getBannerScriptUrl(config);
   const resolvedSlotName = slotName || `banner_${size}`;
 
   useAdVisibilityTracking(hostRef, resolvedSlotName);
-  useAdAccessibilityLabels(hostRef);
+  useEffect(() => () => cleanupRef.current(), []);
 
-  useEffect(() => {
-    const host = hostRef.current;
-    if (!host || !scriptUrl || !config.key) return;
-
-    setRenderState("loading");
-    let cancelled = false;
-    let settled = false;
+  const loadFrame = () => {
+    cleanupRef.current();
+    const frameDocument = frameRef.current?.contentDocument;
+    const slot = frameDocument?.getElementById("adsterra-slot");
+    if (!isAdDocumentReady(window, window.location.pathname) || !slot || !scriptUrl || !config.key) return;
+    let active = true;
     let reportTimer: number | undefined;
-    let collapseTimer: number | undefined;
-    let observer: MutationObserver | undefined;
-    let releaseQueue: (() => void) | undefined;
-
-    const markRendered = () => {
-      if (cancelled || settled || !hasRenderedCreative(host)) return false;
-      settled = true;
-      setRenderState("rendered");
-      trackAdEvent("ad_creative_rendered", { ad_slot: resolvedSlotName, ad_format: size });
-      if (reportTimer) window.clearTimeout(reportTimer);
-      if (collapseTimer) window.clearTimeout(collapseTimer);
-      observer?.disconnect();
-      return true;
+    const observer = new MutationObserver(() => addAccessibleNames(slot));
+    observer.observe(slot, { childList: true, subtree: true });
+    trackAdEvent("ad_slot_mounted", { ad_slot: resolvedSlotName, ad_format: size });
+    reportTimer = window.setTimeout(() => {
+      if (active && !hasRenderedCreative(slot)) trackAdEvent("ad_empty_after_5s", { ad_slot: resolvedSlotName, ad_format: size });
+    }, AD_EMPTY_REPORT_MS);
+    // Each frame has its own Window; the serialized loader never shares atOptions
+    // with a removed or differently sized slot. Destroying the frame cancels its runtime.
+    const dispose = mountAdsterraBanner(slot, { ...config, key: config.key, scriptUrl }, (state: BannerLoadState) => {
+      if (!active || !isAdDocumentReady(window, window.location.pathname)) return;
+      if (state === "script-loaded") trackAdEvent("ad_script_loaded", { ad_slot: resolvedSlotName, ad_format: size });
+      else if (state === "filled") {
+        window.clearTimeout(reportTimer);
+        addAccessibleNames(slot);
+        setRenderState("rendered");
+        trackAdEvent("ad_creative_rendered", { ad_slot: resolvedSlotName, ad_format: size });
+      } else if (["script-error", "script-timeout", "script-cancelled", "no-fill"].includes(state)) {
+        window.clearTimeout(reportTimer);
+        observer.disconnect();
+        setRenderState("empty");
+        onEmpty?.();
+        if (state === "script-error") trackAdEvent("ad_script_error", { ad_slot: resolvedSlotName, ad_format: size });
+        trackAdEvent("ad_slot_collapsed", { ad_slot: resolvedSlotName, ad_format: size, reason: state });
+      }
+    });
+    cleanupRef.current = () => {
+      active = false;
+      window.clearTimeout(reportTimer);
+      observer.disconnect();
+      dispose();
     };
+  };
 
-    const collapseEmptySlot = (reason: "script_error" | "timeout") => {
-      if (cancelled || settled || markRendered()) return;
-      settled = true;
-      setRenderState("empty");
-      trackAdEvent("ad_slot_collapsed", { ad_slot: resolvedSlotName, ad_format: size, reason });
-      if (reportTimer) window.clearTimeout(reportTimer);
-      if (collapseTimer) window.clearTimeout(collapseTimer);
-      observer?.disconnect();
-      host.replaceChildren();
-      releaseQueue?.();
-    };
-
-    const startFillWatch = () => {
-      observer = new MutationObserver(markRendered);
-      observer.observe(host, { childList: true, subtree: true });
-      reportTimer = window.setTimeout(() => {
-        if (!markRendered()) {
-          trackAdEvent("ad_empty_after_5s", { ad_slot: resolvedSlotName, ad_format: size });
-        }
-      }, AD_EMPTY_REPORT_MS);
-      collapseTimer = window.setTimeout(() => collapseEmptySlot("timeout"), AD_COLLAPSE_MS);
-    };
-
-    const queue = window.__adsterraBannerQueue || Promise.resolve();
-    window.__adsterraBannerQueue = queue.then(
-      () =>
-        new Promise<void>((resolve) => {
-          releaseQueue = resolve;
-          if (cancelled || !host.isConnected) {
-            resolve();
-            return;
-          }
-
-          trackAdEvent("ad_slot_mounted", { ad_slot: resolvedSlotName, ad_format: size });
-          host.replaceChildren();
-          startFillWatch();
-          window.atOptions = {
-            key: config.key,
-            format: "iframe",
-            height: config.height,
-            width: config.width,
-            params: {}
-          };
-
-          const script = document.createElement("script");
-          script.type = "text/javascript";
-          script.src = scriptUrl;
-          script.async = false;
-          script.onload = () => {
-            trackAdEvent("ad_script_loaded", { ad_slot: resolvedSlotName, ad_format: size });
-            resolve();
-          };
-          script.onerror = () => {
-            trackAdEvent("ad_script_error", { ad_slot: resolvedSlotName, ad_format: size });
-            collapseEmptySlot("script_error");
-            resolve();
-          };
-          host.appendChild(script);
-        })
-    );
-
-    return () => {
-      cancelled = true;
-      settled = true;
-      if (reportTimer) window.clearTimeout(reportTimer);
-      if (collapseTimer) window.clearTimeout(collapseTimer);
-      observer?.disconnect();
-      host.replaceChildren();
-      releaseQueue?.();
-    };
-  }, [config.height, config.key, config.width, resolvedSlotName, scriptUrl, size]);
-
-  if (!scriptUrl || !config.key || renderState === "empty") return null;
-
-  return (
-    <AdvertisementShell className={`${className} ad-shell--banner ad-shell--${size}`} state={renderState}>
-      <div
-        ref={hostRef}
-        data-ad-slot={resolvedSlotName}
-        data-ad-format={size}
-        className="ad-host"
-        style={{ minHeight: config.height, width: "100%", maxWidth: config.width }}
-      />
-    </AdvertisementShell>
-  );
-}
-
-function usePreferredLeaderboardSize(hostRef: React.RefObject<HTMLDivElement | null>) {
-  const [size, setSize] = useState<BannerSize | null>(null);
-
-  useEffect(() => {
-    const host = hostRef.current;
-    if (!host) return;
-    const chooseSize = () => {
-      setSize(chooseLeaderboardSize(host.getBoundingClientRect().width, hasBannerSlot("728x90"), hasBannerSlot("320x50")));
-    };
-
-    chooseSize();
-    const observer = new ResizeObserver(chooseSize);
-    observer.observe(host);
-    return () => observer.disconnect();
-  }, [hostRef]);
-
-  return size;
+  if (cleanAdRoute || !scriptUrl || !config.key || renderState === "empty") return null;
+  return <AdvertisementShell className={`ad-shell--banner ${className}`} state={renderState}>
+    <div ref={hostRef} className="ad-host" style={{ width: config.width, height: config.height }}>
+      <iframe key={`${config.key}:${scriptUrl}:${size}`} ref={frameRef} title="Advertisement" srcDoc={EMPTY_AD_DOCUMENT}
+        onLoad={loadFrame} width={config.width} height={config.height} loading={eager ? "eager" : "lazy"}
+        scrolling="no" style={{ display: "block", border: 0, maxWidth: "100%" }} />
+    </div>
+  </AdvertisementShell>;
 }
 
 function AdsterraNativeUnit({
@@ -373,17 +293,17 @@ function AdsterraNativeUnit({
   slotName?: string;
   scriptUrl?: string;
 }) {
+  const cleanAdRoute = useCleanAdRoute();
   const hostRef = useRef<HTMLDivElement>(null);
   const [renderState, setRenderState] = useState<AdRenderState>("loading");
   const cleanContainerId = useMemo(() => containerId?.replace(/^#/, ""), [containerId]);
   const normalizedScriptUrl = normalizeScriptUrl(scriptUrl);
 
   useAdVisibilityTracking(hostRef, slotName);
-  useAdAccessibilityLabels(hostRef);
 
   useEffect(() => {
     const host = hostRef.current;
-    if (!host || !cleanContainerId || !normalizedScriptUrl) return;
+    if (cleanAdRoute || !host || !cleanContainerId || !normalizedScriptUrl || !isAdDocumentReady(window, window.location.pathname)) return;
 
     setRenderState("loading");
     trackAdEvent("ad_slot_mounted", { ad_slot: slotName, ad_format: "native" });
@@ -395,11 +315,11 @@ function AdsterraNativeUnit({
 
     let settled = false;
     const markRendered = () => {
-      if (settled || !hasRenderedCreative(container)) return false;
+      addAccessibleNames(host);
+      if (settled || !hasRenderedCreative(host)) return false;
       settled = true;
       setRenderState("rendered");
       trackAdEvent("ad_creative_rendered", { ad_slot: slotName, ad_format: "native" });
-      observer.disconnect();
       window.clearTimeout(emptyReport);
       window.clearTimeout(collapseTimer);
       return true;
@@ -417,7 +337,7 @@ function AdsterraNativeUnit({
     };
 
     const observer = new MutationObserver(markRendered);
-    observer.observe(container, { childList: true, subtree: true });
+    observer.observe(host, { childList: true, subtree: true });
 
     const emptyReport = window.setTimeout(() => {
       if (!markRendered()) trackAdEvent("ad_empty_after_5s", { ad_slot: slotName, ad_format: "native" });
@@ -440,18 +360,20 @@ function AdsterraNativeUnit({
 
     return () => {
       settled = true;
-      observer.disconnect();
+      script.onload = null;
+      script.onerror = null;
       window.clearTimeout(emptyReport);
       window.clearTimeout(collapseTimer);
+      observer.disconnect();
       host.replaceChildren();
     };
-  }, [cleanContainerId, normalizedScriptUrl, slotName]);
+  }, [cleanAdRoute, cleanContainerId, normalizedScriptUrl, slotName]);
 
-  if (!cleanContainerId || !normalizedScriptUrl || renderState === "empty") return null;
+  if (cleanAdRoute || !cleanContainerId || !normalizedScriptUrl || renderState === "empty") return null;
 
   return (
     <AdvertisementShell className={className} state={renderState}>
-      <div ref={hostRef} className="ad-host ad-host-native" data-ad-slot={slotName} data-ad-format="native" />
+      <div ref={hostRef} className="ad-host ad-host-native" />
     </AdvertisementShell>
   );
 }
@@ -460,240 +382,248 @@ export function AdsterraSmartLink() {
   return null;
 }
 
-// Backward-compatible name used by first-generation site layouts.
-export function SponsoredSmartLink() {
-  return <AdsterraSmartLink />;
+export function AdsterraSmartLinkAnchor({ children = "Sponsored link: View offer", className = "" }: { children?: React.ReactNode; className?: string } = {}) {
+  const cleanAdRoute = useCleanAdRoute();
+  const href = normalizeAdUrl(runtimeConfig.adsterraSmartLinkUrl);
+  if (cleanAdRoute || !href) return null;
+  return <p className="ad-sponsored-cta"><a href={href} target="_blank" rel="nofollow sponsored noopener noreferrer" className={className}>{children} <span aria-hidden="true">↗</span></a></p>;
 }
 
-export function AdsterraSmartLinkAnchor({
-  children = "Sponsored link",
-  className = ""
-}: {
-  children?: React.ReactNode;
-  className?: string;
-}) {
-  if (!runtimeConfig.adsterraSmartLinkUrl) return null;
-
-  return (
-    <a
-      className={className}
-      href={runtimeConfig.adsterraSmartLinkUrl}
-      rel="nofollow sponsored noopener noreferrer"
-      target="_blank"
-    >
-      {children}
-    </a>
-  );
-}
-
-export function AdsterraBanner() {
-  const clean = useCleanAdRoute();
-  if (clean) return null;
-  return <AdsterraBannerUnit size="300x250" slotName="content_rectangle" />;
-}
-
-export function AdsterraRectangle() {
-  const clean = useCleanAdRoute();
-  if (clean) return null;
-  return <AdsterraBannerUnit size="300x250" slotName="bottom_rectangle" />;
-}
-
-export function AdsterraLeaderboard() {
+function ResponsiveBanner({ rectangle = false }: { rectangle?: boolean }) {
   const hostRef = useRef<HTMLDivElement>(null);
-  const clean = useCleanAdRoute();
-  const size = usePreferredLeaderboardSize(hostRef);
-  if (clean) return null;
+  const [size, setSize] = useState<BannerSize | null>(null);
+  const clearSize = useCallback(() => setSize(null), []);
+  const cleanAdRoute = useCleanAdRoute();
 
-  return (
-    <div ref={hostRef} className="ad-leaderboard">
-      {size ? <AdsterraBannerUnit key={size} size={size} slotName={size === "728x90" ? "top_leaderboard" : "mobile_leaderboard"} /> : null}
-    </div>
-  );
-}
+  useEffect(() => {
+    const host = hostRef.current;
+    if (cleanAdRoute || !host) return;
+    let previousSize: BannerSize | null | undefined;
+    const chooseSize = (width: number) => {
+      const next = rectangle
+        ? width >= 300 && hasBannerSlot("300x250") ? "300x250" : null
+        : selectLeaderboardSize(width, { desktop: hasBannerSlot("728x90"), mobile: hasBannerSlot("320x50") }, window.innerWidth);
+      // A collapsed slot stays empty until a different banner size is needed.
+      if (previousSize === next) return;
+      previousSize = next;
+      setSize(current => current === next ? current : next);
+    };
+    const measure = () => chooseSize(host.getBoundingClientRect().width);
+    measure();
+    const observer = new ResizeObserver(entries => chooseSize(entries[0]?.contentRect.width ?? 0));
+    observer.observe(host);
+    window.addEventListener("resize", measure);
+    return () => { observer.disconnect(); window.removeEventListener("resize", measure); };
+  }, [cleanAdRoute, rectangle]);
 
-export function AdsterraNative1() {
-  const clean = useCleanAdRoute();
-  if (clean) return null;
-  return (
-    <AdsterraNativeUnit
-      containerId={runtimeConfig.adsterraNative1Id}
-      slotName="native_inline"
-      scriptUrl={runtimeConfig.adsterraNative1ScriptUrl}
-    />
-  );
+  if (cleanAdRoute) return null;
+  return <div className="ad-responsive" ref={hostRef}>{size ? <AdsterraBannerUnit key={size} size={size} onEmpty={clearSize} slotName={rectangle ? "bottom_rectangle" : `responsive_leaderboard_${size}`} /> : null}</div>;
 }
 
 export function AdsterraArticleTop() {
-  const clean = useCleanAdRoute();
-  if (clean || !hasLeaderboardSlot()) return null;
-
-  return (
-    <div className="ad-placement ad-placement-top">
-      <AdsterraLeaderboard />
-    </div>
-  );
+  const cleanAdRoute = useCleanAdRoute();
+  if (cleanAdRoute || !hasLeaderboardSlot()) return null;
+  return <div className="ad-placement ad-placement-top" data-ad-placement="top"><ResponsiveBanner /></div>;
 }
 
 export function AdsterraArticleMid() {
-  const clean = useCleanAdRoute();
-  if (clean || !hasNativeSlot(runtimeConfig.adsterraNative1Id, runtimeConfig.adsterraNative1ScriptUrl)) return null;
-
-  return (
-    <div className="ad-placement ad-placement-mid">
-      <AdsterraNative1 />
-    </div>
-  );
+  const cleanAdRoute = useCleanAdRoute();
+  if (cleanAdRoute || !hasNativeSlot(runtimeConfig.adsterraNative1Id, runtimeConfig.adsterraNative1ScriptUrl)) return null;
+  return <div className="ad-placement ad-placement-mid" data-ad-placement="mid"><AdsterraNativeUnit containerId={runtimeConfig.adsterraNative1Id} scriptUrl={runtimeConfig.adsterraNative1ScriptUrl} slotName="native_inline" /></div>;
 }
 
 export function AdsterraArticleBottom() {
-  const clean = useCleanAdRoute();
-  if (clean || !hasBannerSlot("300x250")) return null;
+  const cleanAdRoute = useCleanAdRoute();
+  if (cleanAdRoute || !hasBannerSlot("300x250")) return null;
+  return <div className="ad-placement ad-placement-bottom" data-ad-placement="bottom"><ResponsiveBanner rectangle /><AdsterraSmartLinkAnchor /></div>;
+}
 
-  return (
-    <div className="ad-placement ad-placement-bottom">
-      <AdsterraRectangle />
-    </div>
-  );
+function ArticleRail({ side }: { side: "left" | "right" }) {
+  const pathname = usePathname();
+  const cleanAdRoute = useCleanAdRoute();
+  const [wide, setWide] = useState(false);
+  const size = side === "left" ? "160x600" : "160x300";
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 1280px)");
+    const update = () => setWide(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  if (cleanAdRoute || !pathname || !getAdLayoutPolicy(pathname).desktopRails || !wide || !runtimeConfig.adsterraEnableStickyRail || !hasBannerSlot(size)) return null;
+  return <div className="article-rail-sticky" data-ad-rail={side}><div><AdsterraBannerUnit size={size} slotName={`article_${side}_rail_${size}`} /></div></div>;
+}
+
+export function AdsterraArticleLeftRail() {
+  return <ArticleRail side="left" />;
+}
+
+export function AdsterraArticleRightRail() {
+  return <ArticleRail side="right" />;
 }
 
 export function AdsterraToolAd() {
-  const clean = useCleanAdRoute();
-  if (clean || !hasLeaderboardSlot()) return null;
-
-  return (
-    <div className="ad-placement ad-placement-tool">
-      <AdsterraLeaderboard />
-    </div>
-  );
+  return <AdsterraArticleTop />;
 }
 
 export function AdsterraToolBottom() {
-  const clean = useCleanAdRoute();
-  if (clean || !hasBannerSlot("300x250")) return null;
-
-  return (
-    <div className="ad-placement ad-placement-tool-bottom">
-      <AdsterraRectangle />
-    </div>
-  );
+  return <AdsterraArticleBottom />;
 }
 
-/**
- * A conservative portfolio fallback for legacy sites whose page templates
- * have little or no inline inventory. It is wired only by the migration
- * tool when source coverage is below the threshold, and remains clean-route
- * aware even though it lives in the root layout.
- */
-export function AdsterraGlobalFallback() {
-  const cleanAdRoute = useCleanAdRoute();
-  if (cleanAdRoute || !hasLeaderboardSlot()) return null;
-
-  return (
-    <div className="ad-placement ad-placement-global-fallback">
-      <AdsterraLeaderboard />
-    </div>
-  );
-}
-
-// Backward-compatible placement API used by older generated page templates.
-export function AdSlot({ label }: { label: string }) {
-  if (label === "native1") return <AdsterraNative1 />;
-  if (label === "leaderboard") return <AdsterraLeaderboard />;
-  return <AdsterraRectangle />;
+function loadGlobalScript(id: string, scriptUrl: string, format: string) {
+  if (!isAdDocumentReady(window, window.location.pathname) || document.getElementById(id)) return;
+  const script = document.createElement("script");
+  script.id = id;
+  script.src = scriptUrl;
+  script.async = true;
+  script.dataset.cfasync = "false";
+  script.onload = () => trackAdEvent("ad_script_loaded", { ad_slot: format, ad_format: format });
+  script.onerror = () => trackAdEvent("ad_script_error", { ad_slot: format, ad_format: format });
+  window.__adsterraGlobalsExecuted = true;
+  document.body.appendChild(script);
 }
 
 export function AdsterraPopunderGate() {
   const pathname = usePathname();
-
+  const lastPage = useRef<string | null>(null);
   useEffect(() => {
-    const scriptUrl = normalizeScriptUrl(runtimeConfig.adsterraPopunderScriptUrl);
-    if (isCleanAdRoute(pathname) || !runtimeConfig.adsterraEnablePopunder || !scriptUrl) return;
-
+    const scriptUrl = normalizeAdUrl(runtimeConfig.adsterraPopunderScriptUrl);
+    if (!pathname || !isAdEligibleRoute(pathname) || !runtimeConfig.adsterraEnablePopunder || !scriptUrl) return;
     const pageViewsKey = "roblox-site-adsterra-pageviews";
     const loadedKey = "roblox-site-adsterra-popunder-loaded";
-    const lastPageKey = "roblox-site-adsterra-last-page";
+    let pageViews: number;
     try {
-      if (window.sessionStorage.getItem(loadedKey)) return;
-      const newPage = window.sessionStorage.getItem(lastPageKey) !== pathname;
-      const nextPageViews = Number(window.sessionStorage.getItem(pageViewsKey) || "0") + Number(newPage);
-      window.sessionStorage.setItem(pageViewsKey, String(nextPageViews));
-      window.sessionStorage.setItem(lastPageKey, pathname);
-      if (nextPageViews < Math.max(2, runtimeConfig.adsterraPopunderMinPageViews)) return;
+      const previous = Number.parseInt(sessionStorage.getItem(pageViewsKey) || "0", 10);
+      pageViews = (Number.isFinite(previous) ? previous : 0) + (lastPage.current === pathname ? 0 : 1);
+      lastPage.current = pathname;
+      sessionStorage.setItem(pageViewsKey, String(pageViews));
+      if (sessionStorage.getItem(loadedKey)) return;
     } catch {
-      // Without session storage, the once-per-session limit cannot be enforced.
       return;
     }
-
-    let script: HTMLScriptElement | undefined;
+    if (pageViews < Math.max(2, runtimeConfig.adsterraPopunderMinPageViews)) return;
+    const started = performance.now();
     const timer = window.setTimeout(() => {
-      if (document.getElementById("adsterra-popunder")) return;
+      if (!isAdEligibleRoute(window.location.pathname)) return;
       try {
-        window.sessionStorage.setItem(loadedKey, "true");
+        if (!canLoadPopunder(performance.now() - started, pageViews, Boolean(sessionStorage.getItem(loadedKey)))) return;
+        sessionStorage.setItem(loadedKey, "true");
       } catch {
         return;
       }
-      script = document.createElement("script");
-      script.id = "adsterra-popunder";
-      script.src = scriptUrl;
-      script.async = true;
-      script.onload = () => trackAdEvent("ad_script_loaded", { ad_slot: "popunder_gate", ad_format: "popunder" });
-      script.onerror = () => trackAdEvent("ad_script_error", { ad_slot: "popunder_gate", ad_format: "popunder" });
-      document.body.appendChild(script);
+      loadGlobalScript("adsterra-popunder", scriptUrl, "popunder");
     }, Math.max(30000, runtimeConfig.adsterraPopunderDelayMs));
-
-    return () => {
-      window.clearTimeout(timer);
-      script?.remove();
-    };
+    return () => window.clearTimeout(timer);
   }, [pathname]);
-
+  useEffect(() => () => { document.getElementById("adsterra-popunder")?.remove(); }, []);
   return null;
 }
 
 export function AdsterraSocialBarGate() {
-  const cleanAdRoute = useCleanAdRoute();
+  const pathname = usePathname();
+  const eligible = Boolean(pathname && isAdEligibleRoute(pathname));
+  useEffect(() => {
+    const scriptUrl = normalizeAdUrl(runtimeConfig.adsterraSocialBarScriptUrl);
+    if (!eligible || !runtimeConfig.adsterraEnableSocialBar || !scriptUrl) return;
+    loadGlobalScript("adsterra-social-bar", scriptUrl, "social_bar");
+    return () => { document.getElementById("adsterra-social-bar")?.remove(); };
+  }, [eligible]);
+  return null;
+}
+
+function AdsterraCleanRouteBoundary() {
+  const pathname = usePathname();
+  useEffect(() => installAdDocumentBoundary(window), []);
+  useEffect(() => ensureAdDocumentBoundary(window), [pathname]);
+  return null;
+}
+
+export function AdsterraGlobalAds() {
+  return <><AdsterraCleanRouteBoundary /><AdsterraPopunderGate /><AdsterraSocialBarGate /></>;
+}
+
+
+const bottomBannerConfigs: Record<"320x50" | "468x60", BannerConfig> = {
+  "320x50": { key: runtimeConfig.adsterraBottomMobileKey, scriptUrl: runtimeConfig.adsterraBottomMobileScriptUrl, width: 320, height: 50 },
+  "468x60": bannerConfigs["468x60"]
+};
+
+function FixedBottomBanner({ size }: { size: "320x50" | "468x60" }) {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+  const [empty, setEmpty] = useState(false);
+  const [obscured, setObscured] = useState(false);
+  const markEmpty = useCallback(() => setEmpty(true), []);
 
   useEffect(() => {
-    if (cleanAdRoute) return;
-    const scriptUrl = normalizeScriptUrl(runtimeConfig.adsterraSocialBarScriptUrl);
-    if (!runtimeConfig.adsterraEnableSocialBar || !scriptUrl) return;
-    if (document.getElementById("adsterra-social-bar")) return;
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+    const measure = () => setHeight(wrapper.getBoundingClientRect().height);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(wrapper);
+    return () => observer.disconnect();
+  }, [empty, obscured]);
 
-    const script = document.createElement("script");
-    script.id = "adsterra-social-bar";
-    script.async = true;
-    script.dataset.cfasync = "false";
-    script.src = scriptUrl;
-    script.onload = () => trackAdEvent("ad_script_loaded", { ad_slot: "social_bar", ad_format: "social_bar" });
-    script.onerror = () => trackAdEvent("ad_script_error", { ad_slot: "social_bar", ad_format: "social_bar" });
-    document.body.appendChild(script);
-    return () => script.remove();
-  }, [cleanAdRoute]);
+  useEffect(() => {
+    if (empty) return;
+    const update = () => setObscured(Boolean(
+      document.querySelector('dialog[open], [role="dialog"][aria-modal="true"], [role="dialog"][data-state="open"], [role="alertdialog"]') ||
+      (window.matchMedia('(max-width: 1179px)').matches && document.querySelector('#mobile-site-nav'))
+    ));
+    update();
+    const observer = new MutationObserver(update);
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["open", "aria-modal", "data-state", "data-open", "role"] });
+    window.addEventListener("resize", update);
+    return () => { observer.disconnect(); window.removeEventListener("resize", update); };
+  }, [empty]);
 
-  return null;
+  if (empty) return null;
+  return <>
+    {!obscured && <div aria-hidden="true" data-ad-bottom-space style={{ height }} />}
+    <div ref={wrapperRef} className="ad-bottom-viewport" data-ad-bottom-host hidden={obscured}>
+      <AdsterraBannerUnit size={size} configOverride={bottomBannerConfigs[size]} slotName={`bottom_sticky_${size}`} className="ad-bottom-banner" onEmpty={markEmpty} eager />
+    </div>
+  </>;
 }
 
-export function AdsterraStickyRail() {
-  // Compatibility export: the article layout owns both rails.
-  return null;
+export function AdsterraBottomSticky() {
+  const cleanAdRoute = useCleanAdRoute();
+  const [widths, setWidths] = useState({ viewport: 0, available: 0 });
+  const enabled = !cleanAdRoute && runtimeConfig.adsterraEnableBottomSticky === true;
+  useEffect(() => {
+    if (!enabled) return;
+    const measure = () => {
+      const probe = document.createElement("div");
+      probe.className = "ad-bottom-viewport";
+      probe.style.visibility = "hidden";
+      document.body.appendChild(probe);
+      const style = window.getComputedStyle(probe);
+      const available = probe.getBoundingClientRect().width - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - 10;
+      probe.remove();
+      setWidths(current => current.viewport === window.innerWidth && current.available === available ? current : { viewport: window.innerWidth, available });
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(document.documentElement);
+    window.addEventListener("resize", measure);
+    return () => { observer.disconnect(); window.removeEventListener("resize", measure); };
+  }, [enabled]);
+  if (!enabled) return null;
+  const size = selectBottomBannerSize(widths.viewport, widths.available, {
+    desktop: Boolean(bottomBannerConfigs["468x60"].key && getBannerScriptUrl(bottomBannerConfigs["468x60"])),
+    mobile: Boolean(bottomBannerConfigs["320x50"].key && getBannerScriptUrl(bottomBannerConfigs["320x50"]))
+  });
+  return size ? <FixedBottomBanner key={`${size}:${bottomBannerConfigs[size].key}`} size={size} /> : null;
 }
 
-export function AdsterraArticleLeftRail() {
-  const enabled = useDesktopArticleRails();
-  if (!enabled || !runtimeConfig.adsterraEnableStickyRail || !hasBannerSlot("160x600")) return null;
-  return <AdsterraBannerUnit size="160x600" slotName="article_left_160x600" />;
-}
-
-export function AdsterraArticleRightRail() {
-  const enabled = useDesktopArticleRails();
-  if (!enabled || !runtimeConfig.adsterraEnableStickyRail || !hasBannerSlot("160x300")) return null;
-  return <AdsterraBannerUnit size="160x300" slotName="article_right_160x300" />;
-}
-
-export function AdDisclosure() {
-  return (
-    <p className="text-xs leading-5 text-white/42">
-      This fan site may show third-party ads to support hosting and updates.
-    </p>
-  );
-}
+// Compatibility exports retained for existing generated page templates.
+export function SponsoredSmartLink() { return <AdsterraSmartLink />; }
+export function AdsterraBanner() { return <AdsterraBannerUnit size="300x250" slotName="content_rectangle" />; }
+export function AdsterraRectangle() { return <AdsterraBannerUnit size="300x250" slotName="bottom_rectangle" />; }
+export function AdsterraLeaderboard() { return <ResponsiveBanner />; }
+export function AdsterraNative1() { return <AdsterraNativeUnit containerId={runtimeConfig.adsterraNative1Id} scriptUrl={runtimeConfig.adsterraNative1ScriptUrl} slotName="native_inline" />; }
+export function AdsterraGlobalFallback() { return <AdsterraArticleTop />; }
+export function AdSlot({ label }: { label: string }) { return label === "native1" ? <AdsterraNative1 /> : label === "leaderboard" ? <AdsterraLeaderboard /> : <AdsterraRectangle />; }
+export function AdsterraStickyRail() { return null; }
+export function AdDisclosure() { return <p className="text-xs leading-5 text-white/42">This fan site may show third-party ads to support hosting and updates.</p>; }

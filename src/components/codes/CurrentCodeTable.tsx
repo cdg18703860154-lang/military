@@ -6,7 +6,7 @@ export function CurrentCodeTable() {
     <table className="current-code-table"><thead><tr><th scope="col">Code and action</th><th scope="col">Reported reward and status</th></tr></thead>
       <tbody>{currentCodes.map((item) => <tr key={item.code}>
         <td><code>{item.code}</code><CodeActions code={item.code} status={item.status} /></td>
-        <td>{item.reportedReward}<br />{item.status}<br /><small>Source check: {item.sourceCheckedAt}</small></td>
+        <td>{item.reportedReward}<br /><strong data-code-status={item.status}>{item.status}</strong><br /><small>Source check: {item.sourceCheckedAt}</small></td>
       </tr>)}</tbody>
     </table>
   </div>;

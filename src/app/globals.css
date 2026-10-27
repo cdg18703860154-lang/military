@@ -1093,3 +1093,63 @@ main .current-code-table td, main .current-code-table th { min-width: 0; padding
 main .current-code-table button { white-space: normal; max-width: 100%; }
 [data-source-notes] > section, [data-source-notes] > nav, [data-source-notes] > details { padding: 1rem; border: 1px solid var(--line); border-radius: var(--radius-sm); }
 main :is(a, button, select, summary, [tabindex]):focus-visible { outline: 2px solid #67e8f9; outline-offset: 3px; }
+
+/* Advertisement inventory collapses when no configured creative can mount. */
+.ad-placement:not(:has(.ad-shell)):not(:has(.ad-sponsored-cta)) { margin-block: 0; }
+.ad-responsive { width: 100%; min-width: 0; }
+.article-rail-sticky { position: sticky; top: calc(var(--header-height) + 1rem); display: flex; justify-content: center; }
+.ad-bottom-viewport { position: fixed; inset-inline: 0; bottom: 0; display: flex; justify-content: center; z-index: 20; padding: 0 max(16px, env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); pointer-events: none; }
+.ad-bottom-viewport[hidden] { display: none; }
+.ad-bottom-banner.ad-shell { width: max-content; max-width: 100%; min-height: 0; margin: 0; padding: 4px; gap: 3px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); box-shadow: 0 -2px 12px #0003; pointer-events: auto; }
+.ad-bottom-banner .ad-label { line-height: 12px; align-self: center; }
+
+/* Banner creative dimensions exclude the shell’s horizontal chrome. */
+.ad-shell--banner { padding-inline: 0; border-inline: 0; }
+
+/* GamesDataHub resources directly below the page title. */
+.gdh-resource {
+  --gdh-accent: var(--accent);
+  --gdh-ink: var(--bg);
+  margin-block: 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--gdh-accent);
+  border-radius: .375rem;
+  background: var(--surface, var(--card, transparent));
+  color: inherit;
+  text-align: left;
+  min-width: 0;
+}
+.gdh-resource .gdh-resource__brand { margin: 0 0 .5rem; font-size: .75rem; font-weight: 700; color: inherit; }
+.gdh-resource h2 { margin: 0; font-size: 1.25rem; line-height: 1.4; color: inherit; }
+.gdh-resource p { margin: .75rem 0 0; font-size: .875rem; line-height: 1.6; color: inherit; }
+.gdh-resource__actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1rem; }
+.gdh-resource .gdh-resource__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: 2.75rem;
+  padding: .75rem 1rem;
+  border: 1px solid var(--gdh-accent);
+  border-radius: .25rem;
+  background: var(--gdh-accent);
+  color: var(--gdh-ink);
+  font-size: .875rem;
+  font-weight: 800;
+  line-height: 1.5;
+  text-decoration: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.gdh-resource .gdh-resource__link:hover { filter: brightness(1.08); text-decoration: underline; }
+.gdh-resource .gdh-resource__link:focus-visible { outline: 2px solid var(--gdh-accent); outline-offset: 4px; }
+@media (max-width: 600px) {
+  .gdh-resource__actions { flex-direction: column; }
+  .gdh-resource .gdh-resource__link { width: 100%; }
+}
+
+/* Code availability is separate from source and reward detail. */
+:is(span, strong, td, dd)[data-code-status="Active"] { color: #8bdc65; }
+:is(span, strong, td, dd)[data-code-status="Check"] { color: #efc36b; }

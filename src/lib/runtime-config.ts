@@ -53,8 +53,5 @@ const runtimeEnvConfig = {
 
 export const runtimeConfig = {
   ...runtimeEnvConfig,
-  ...adsterraStaticConfig,
-  // Page inventory is enabled by the bridge; global formats require a separate opt-in.
-  adsterraEnablePopunder: runtimeEnvConfig.adsterraEnablePopunder,
-  adsterraEnableSocialBar: runtimeEnvConfig.adsterraEnableSocialBar
+  ...adsterraStaticConfig
 };
